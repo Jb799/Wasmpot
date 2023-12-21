@@ -7,3 +7,5 @@ edition = "2021"
 actix-web = "4"
 actix-files = "0.6"
 async-std = "1.10.0"
+serde = { version = "1.0", features = ["derive"] }
+html-escape = "0.2.13"
