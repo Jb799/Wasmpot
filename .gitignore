@@ -1,0 +1,23 @@
+# ---> Rust
+/target/
+**/*.rs.bk
+
+# Rust - Fichiers de sauvegarde de l'éditeur
+**/*.swp
+**/*.swo
+
+# ---> Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Fichiers de données locales
+.vscode/*.log
+.vscode/.s
+.vscode/
+
+# ---> Autres fichiers et dossiers communs à ignorer
+.DS_Store
+Thumbs.db
