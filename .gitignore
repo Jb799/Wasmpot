@@ -1,5 +1,5 @@
 # ---> Rust
-/target/
+**/target/
 **/*.rs.bk
 
 # Rust - Fichiers de sauvegarde de l'éditeur
