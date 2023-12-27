@@ -13,8 +13,11 @@ Instructions on setting up Wasmpot in your environment.
 ## Usage 📚
 Guidelines on how to use Wasmpot effectively.
 
-## Contributing 🤝
-How you can contribute to the Wasmpot project.
+## Contributors 🤝
+Jean-Baptiste J.
+Duncan S.
+Agathe M.
+Jean-Baptiste R.
 
 ## License 📄
 Details about the project's license.
