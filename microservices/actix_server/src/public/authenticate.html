@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="login-pf">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+
+            <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Sign in to Keycloak</title>
+    <link rel="icon" href="/resources/2thr9/login/keycloak/img/favicon.ico" />
+            <link href="/resources/2thr9/common/keycloak/web_modules/@patternfly/react-core/dist/styles/base.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/web_modules/@patternfly/react-core/dist/styles/app.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/node_modules/patternfly/dist/css/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/node_modules/patternfly/dist/css/patternfly-additions.min.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/lib/pficon/pficon.css" rel="stylesheet" />
+            <link href="/resources/2thr9/login/keycloak/css/login.css" rel="stylesheet" />
+            <link href="/resources/2thr9/login/keycloak/css/tile.css" rel="stylesheet" />
+<SCRIPT> if (typeof history.replaceState === 'function') {  history.replaceState({}, "some title", "http://127.0.0.1:{WEB_PORT}/realms/master/login-actions/authenticate?execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&client_id=security-admin-console&tab_id=z2Q5UApb17I"); }</SCRIPT></head>
+
+<body class="">
+<div class="login-pf-page">
+    <div id="kc-header" class="login-pf-page-header">
+        <div id="kc-header-wrapper"
+             class=""><div class="kc-logo-text"><span>Keycloak</span></div></div>
+    </div>
+    <div class="card-pf">
+        <header class="login-pf-header">
+                <h1 id="kc-page-title">        Sign in to your account
+
+</h1>
+      </header>
+      <div id="kc-content">
+        <div id="kc-content-wrapper">
+
+
+    <div id="kc-form">
+      <div id="kc-form-wrapper">
+            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="http://127.0.0.1:{WEB_PORT}/realms/master/login-actions/authenticate?session_code=WOXfRRQEQBZm82HbJfK_ZmW8wSAhCoJSJIiSC9I5R2Y&amp;execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&amp;client_id=security-admin-console&amp;tab_id=z2Q5UApb17I" method="post">
+                    <div class="form-group">
+                        <label for="username" class="pf-c-form__label pf-c-form__label-text">Username or email</label>
+
+                        <input tabindex="1" id="username" class="pf-c-form-control" name="username" value="{USERNAME}"  type="text" autofocus autocomplete="off"
+                               aria-invalid="true"
+                        />
+
+                            <span id="input-error" class="pf-c-form__helper-text pf-m-error required kc-feedback-text" aria-live="polite">
+                                    Invalid username or password.
+                            </span>
+
+                    </div>
+
+                <div class="form-group">
+                    <label for="password" class="pf-c-form__label pf-c-form__label-text">Password</label>
+
+                    <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password" autocomplete="off"
+                           aria-invalid="true"
+                    />
+
+
+                </div>
+
+                <div class="form-group login-pf-settings">
+                    <div id="kc-form-options">
+                        </div>
+                        <div class="">
+                        </div>
+
+                  </div>
+
+                  <div id="kc-form-buttons" class="form-group">
+                      <input type="hidden" id="id-hidden-input" name="credentialId" />
+                      <input tabindex="4" class="pf-c-button pf-m-primary pf-m-block btn-lg" name="login" id="kc-login" type="submit" value="Sign In"/>
+                  </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

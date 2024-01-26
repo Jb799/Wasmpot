@@ -1,6 +1,9 @@
-# ---> Rust
-**/target/
-**/*.rs.bk
+# Rust
+target/
+Cargo.lock
+
+# Build files
+*.rs.bk
 
 # Rust - Fichiers de sauvegarde de l'éditeur
 **/*.swp
@@ -13,6 +16,13 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# IDE/Editors
+.idea/
+.vscode/
+*.swp
+*~
+*.swp
+
 # Fichiers de données locales
 .vscode/*.log
 .vscode/.s
@@ -21,3 +31,15 @@
 # ---> Autres fichiers et dossiers communs à ignorer
 .DS_Store
 Thumbs.db
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Generated documentation
+target/doc/
+
+# Rust tools
+.cargo/
+.rustc_info.json
+.history
