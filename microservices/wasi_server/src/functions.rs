@@ -4,6 +4,7 @@ use hyper::{ Body, Response };
 fn get_attributs_header(_http_code: u16) -> Vec<(String, String)> { {
     let mut attributs: Vec<(String, String)> = Vec::new();
 
+    attributs.push(("Content-Type".to_string(), "text/html; charset=utf-8".to_string()));
     attributs.push(("Referrer-Policy".to_string(), "no-referrer".to_string()));
     attributs.push(("Strict-Transport-Security".to_string(), "max-age=31536000; includeSubDomains".to_string()));
     attributs.push(("X-Content-Type-Options".to_string(), "nosniff".to_string()));
@@ -14,7 +15,6 @@ fn get_attributs_header(_http_code: u16) -> Vec<(String, String)> { {
         if _http_code != 201 {
             attributs.push(("Content-Security-Policy".to_string(), "frame-src 'self'; frame-ancestors 'self'; object-src 'none';".to_string()));
             attributs.push(("X-Robots-Tag".to_string(), "none".to_string()));
-            attributs.push(("Content-Type".to_string(), "text/html; charset=utf-8".to_string()));
         }
 
         attributs.push(("X-Frame-Options".to_string(), "SAMEORIGIN".to_string()));

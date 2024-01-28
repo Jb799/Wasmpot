@@ -16,7 +16,7 @@
             <link href="/resources/2thr9/common/keycloak/lib/pficon/pficon.css" rel="stylesheet" />
             <link href="/resources/2thr9/login/keycloak/css/login.css" rel="stylesheet" />
             <link href="/resources/2thr9/login/keycloak/css/tile.css" rel="stylesheet" />
-</head>
+<SCRIPT> if (typeof history.replaceState === 'function') {  history.replaceState({}, "some title", "http://localhost:{WEB_PORT}/realms/master/login-actions/authenticate?execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&client_id=security-admin-console&tab_id={TAB_ID}"); }</SCRIPT></head>
 
 <body class="">
 <div class="login-pf-page">
@@ -36,14 +36,17 @@
 
     <div id="kc-form">
       <div id="kc-form-wrapper">
-            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="http://localhost:{WEB_PORT}/realms/master/login-actions/authenticate?session_code=V0_B94dQtbgzKUs1U0DvAKXDYMmTY42Qrmvhv7bXRmU&amp;execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&amp;client_id=security-admin-console&amp;tab_id={TAB_ID}" method="post">
+            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="http://localhost:{WEB_PORT}/realms/master/login-actions/authenticate?session_code=WOXfRRQEQBZm82HbJfK_ZmW8wSAhCoJSJIiSC9I5R2Y&amp;execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&amp;client_id=security-admin-console&amp;tab_id={TAB_ID}" method="post">
                     <div class="form-group">
                         <label for="username" class="pf-c-form__label pf-c-form__label-text">Username or email</label>
 
-                        <input tabindex="1" id="username" class="pf-c-form-control" name="username" value=""  type="text" autofocus autocomplete="off"
-                               aria-invalid=""
+                        <input tabindex="1" id="username" class="pf-c-form-control" name="username" value="{USERNAME}"  type="text" autofocus autocomplete="off"
+                               aria-invalid="true"
                         />
 
+                            <span id="input-error" class="pf-c-form__helper-text pf-m-error required kc-feedback-text" aria-live="polite">
+                                    Invalid username or password.
+                            </span>
 
                     </div>
 
@@ -51,7 +54,7 @@
                     <label for="password" class="pf-c-form__label pf-c-form__label-text">Password</label>
 
                     <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password" autocomplete="off"
-                           aria-invalid=""
+                           aria-invalid="true"
                     />
 
 

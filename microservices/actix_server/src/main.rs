@@ -1,15 +1,17 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Result};
+use actix_web::{get, web, App, HttpResponse, HttpServer, Result};
 use async_std::fs;
 use actix_files::Files;
-use serde::Deserialize;
-use html_escape::encode_double_quoted_attribute;
+
+use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 
 static WEB_PORT: u16 = 8888;
-static WEB_WASI_PORT: u16 = 8080;
+static WEB_WASI_PORT: u16 = 8000;
 
-#[derive(Deserialize)]
-struct LoginFormInfo {
-    username: String,
+fn generate_random_string(len: usize) -> String {
+    let rng = thread_rng();
+    let random_string: String = rng.sample_iter(&Alphanumeric).take(len).map(char::from).collect();
+    random_string
 }
 
 /* ############## API DEFINE ############## */
@@ -50,6 +52,21 @@ async fn admin_master_console() -> Result<HttpResponse> {
 async fn auth() -> Result<HttpResponse> {
     let path = "./src/public/auth.html";
     let mut html_content = fs::read_to_string(path).await?;
+    let random_tab_id = generate_random_string(11);
+
+    html_content = html_content.replace("{WEB_PORT}", &WEB_WASI_PORT.to_string());
+    html_content = html_content.replace("{TAB_ID}", &random_tab_id.to_string());
+
+    let mut response = HttpResponse::Ok();
+    response.insert_header(("content-type", "text/html"));
+
+    Ok(response.body(html_content))
+}
+
+#[get("/realms/master/login-actions/authenticate")]
+async fn authenticate() -> Result<HttpResponse> {
+    let path = "./src/public/authenticate.html";
+    let mut html_content = fs::read_to_string(path).await?;
     html_content = html_content.replace("{WEB_PORT}", &WEB_WASI_PORT.to_string());
 
     let mut response = HttpResponse::Ok();
@@ -58,19 +75,11 @@ async fn auth() -> Result<HttpResponse> {
     Ok(response.body(html_content))
 }
 
-#[post("/realms/master/login-actions/authenticate")]
-async fn authenticate(form: web::Form<LoginFormInfo>) -> Result<HttpResponse> {
-    let path = "./src/public/authenticate.html";
+#[get("/realms/master/login-actions/authenticate/err")]
+async fn authenticate_err() -> Result<HttpResponse> {
+    let path = "./src/public/authenticate_err.html";
     let mut html_content = fs::read_to_string(path).await?;
     html_content = html_content.replace("{WEB_PORT}", &WEB_WASI_PORT.to_string());
-
-    if !form.username.is_empty() {
-        // Échapper l'entrée utilisateur pour éviter les attaques XSS
-        let escaped_username = encode_double_quoted_attribute(&form.username);
-        html_content = html_content.replace("{USERNAME}", &escaped_username);
-    }else{
-        html_content = html_content.replace("{USERNAME}", "");
-    }
 
     let mut response = HttpResponse::Ok();
     response.insert_header(("content-type", "text/html"));
@@ -128,10 +137,47 @@ async fn config() -> HttpResponse {
     response.body(json)
 }
 
+#[get("/err/login")]
+async fn err_login() -> Result<HttpResponse> {
+    let path = "./src/public/404.html";
+    let mut html_content = fs::read_to_string(path).await?;
+    html_content = html_content.replace("{WEB_PORT}", &WEB_WASI_PORT.to_string());
+    html_content = html_content.replace("{ERR_MESSAGE}", "An error occurred, please login again through your application.");
+
+    let mut response = HttpResponse::NotFound();
+    response.insert_header(("content-type", "text/html"));
+
+    Ok(response.body(html_content))
+}
+
+#[get("/err/login/exec")]
+async fn err_login_exec() -> Result<HttpResponse> {
+    let path = "./src/public/404_exec.html";
+    let mut html_content = fs::read_to_string(path).await?;
+    html_content = html_content.replace("{WEB_PORT}", &WEB_WASI_PORT.to_string());
+
+    let mut response = HttpResponse::NotFound();
+    response.insert_header(("content-type", "text/html"));
+
+    Ok(response.body(html_content))
+}
+
+#[get("/err/login/tabid")]
+async fn err_login_tabid() -> HttpResponse {
+    let mut response = HttpResponse::Found();
+    let random_tab_id = generate_random_string(11);
+
+    response.insert_header(("Location", format!("http://localhost:{}/realms/master/login-actions/authenticate?client_id=security-admin-console&tab_id={}", &WEB_WASI_PORT.to_string(), random_tab_id.to_string())));
+    response.insert_header(("content-type", "text/html"));
+   
+    response.finish()
+}
+
 async fn not_found() -> Result<HttpResponse, std::io::Error> {
     let path = "./src/public/404.html";
     let mut html_content = fs::read_to_string(path).await?;
     html_content = html_content.replace("{WEB_PORT}", &WEB_WASI_PORT.to_string());
+    html_content = html_content.replace("{ERR_MESSAGE}", "Page not found");
 
     let mut response = HttpResponse::NotFound();
     response.insert_header(("content-type", "text/html"));
@@ -142,11 +188,11 @@ async fn not_found() -> Result<HttpResponse, std::io::Error> {
 /* ############## MAIN FUNCTION ############## */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("------------------------------------");
-    println!("####### ✨ WasmPot2 Resource Server ✨ #######\n");
-    println!("[📡] Listening on http://localhost:{}/", WEB_PORT);
-    println!("[✅] Running !");
-    println!("------------------------------------");
+    println!("\n\x1B[32m---------------------------------------------\x1B[0m");
+    println!("\x1B[1;32m####### ✨ WasmPot2 Resource Server ✨ #######\x1B[0m\n");
+    println!("\x1B[32m[📡] Listening on http://localhost:{}/\x1B[0m", WEB_PORT);
+    println!("\x1B[32m[✅] Running !\x1B[0m");
+    println!("\x1B[32m---------------------------------------------\x1B[0m\n\n");
 
     HttpServer::new(|| {
         App::new()
@@ -161,6 +207,10 @@ async fn main() -> std::io::Result<()> {
             .service(step1)
             .service(step2)
             .service(authenticate)
+            .service(err_login)
+            .service(err_login_exec)
+            .service(err_login_tabid)
+            .service(authenticate_err)
             .default_service(
                 web::route().to(not_found)
             )
