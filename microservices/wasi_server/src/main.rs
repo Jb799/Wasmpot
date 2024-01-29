@@ -8,6 +8,7 @@ use tokio::net::TcpListener;
 
 mod functions;
 use functions::set_attributs_header;
+use functions::get_page_id;
 
 use serde::Deserialize;
 use serde_urlencoded::from_str;
@@ -210,7 +211,7 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     .unwrap();
 
     if response_headers.contains_key("content-type") && response_headers.get("content-type").unwrap() == "text/html" {
-        set_attributs_header(&mut response, status_code.as_u16());
+        set_attributs_header(&mut response, get_page_id( uri.path().to_string() ));
     }
           
     // Ajouter les headers de la réponse

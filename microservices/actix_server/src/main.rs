@@ -117,7 +117,6 @@ async fn step1() -> Result<HttpResponse> {
 #[get("/admin/master/console/config")]
 async fn config() -> HttpResponse {
     let mut response = HttpResponse::Ok();
-    response.insert_header(("Content-Type", "application/json"));
     response.insert_header(("content-type", "text/html"));
 
     // Config json:

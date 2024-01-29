@@ -1,36 +1,58 @@
 use hyper::{ Body, Response };
 
 /* ############## HTTP RESPONSE HEADER ############## */
-fn get_attributs_header(_http_code: u16) -> Vec<(String, String)> { {
+fn get_attributs_header(page_id: u16) -> Vec<(String, String)> { {
     let mut attributs: Vec<(String, String)> = Vec::new();
 
-    attributs.push(("Content-Type".to_string(), "text/html; charset=utf-8".to_string()));
-    attributs.push(("Referrer-Policy".to_string(), "no-referrer".to_string()));
-    attributs.push(("Strict-Transport-Security".to_string(), "max-age=31536000; includeSubDomains".to_string()));
-    attributs.push(("X-Content-Type-Options".to_string(), "nosniff".to_string()));
-    attributs.push(("X-XSS-Protection".to_string(), "1; mode=block".to_string()));
+    if page_id == 0 || page_id == 1 || page_id == 6 {
+        attributs.push(("Cache-Control".to_string(), "no-cache, must-revalidate, no-transform, no-store".to_string()));
+    }
+    
+    if page_id == 0 || page_id == 1 || page_id == 2 || page_id == 3 || page_id == 4 || page_id == 5 || page_id == 6 || page_id == 7 || page_id == 8{
+        attributs.push(("Referrer-Policy".to_string(), "no-referrer".to_string()));
+        attributs.push(("Strict-Transport-Security".to_string(), "max-age=31536000; includeSubDomains".to_string()));
+        attributs.push(("X-Content-Type-Options".to_string(), "nosniff".to_string()));
+        attributs.push(("X-XSS-Protection".to_string(), "1; mode=block".to_string()));
+    }
 
-    if ( _http_code >= 200 && _http_code <= 299 ) || _http_code == 400 {
-        
-        if _http_code != 201 {
-            attributs.push(("Content-Security-Policy".to_string(), "frame-src 'self'; frame-ancestors 'self'; object-src 'none';".to_string()));
-            attributs.push(("X-Robots-Tag".to_string(), "none".to_string()));
-        }
+    if page_id == 0 || page_id == 1 || page_id == 3 || page_id == 7 || page_id == 8{
+        attributs.push(("Content-Security-Policy".to_string(), "frame-src 'self'; frame-ancestors 'self'; object-src 'none';".to_string()));
+    }
 
+    if page_id == 0 || page_id == 1 || page_id == 3 || page_id == 5 || page_id == 6 || page_id == 7 || page_id == 8{
+        attributs.push(("Content-Type".to_string(), "text/html; charset=utf-8".to_string()));
+        attributs.push(("X-Robots-Tag".to_string(), "none".to_string()));
+    }
+
+    if page_id == 0 || page_id == 1 || page_id == 3 || page_id == 4 || page_id == 7 || page_id == 8{
         attributs.push(("X-Frame-Options".to_string(), "SAMEORIGIN".to_string()));
+    }
 
-        if _http_code == 200 {
-            attributs.push(("Cache-Control".to_string(), "no-cache, must-revalidate, no-transform, no-store".to_string()));
-        }else if _http_code == 201 {
-            attributs.push(("Cache-Control".to_string(), "no-cache".to_string()));
-        }
+    if page_id == 3 || page_id == 7 || page_id == 8{
+        attributs.push(("Content-Language".to_string(), "en".to_string()));
+    }
+
+    if page_id == 3 || page_id == 4 || page_id == 5{
+        attributs.push(("Cache-Control".to_string(), "no-cache".to_string()));
+    }
+
+    if page_id == 5 || page_id == 6{
+        attributs.push(("Content-Security-Policy".to_string(), "frame-src 'self'; object-src 'none'".to_string()));
+    }
+
+    if page_id == 7 || page_id == 8{
+        attributs.push(("Cache-Control".to_string(), "no-store, must-revalidate, max-age=0".to_string()));
+    }
+
+    if page_id == 4{
+        attributs.push(("Content-Type".to_string(), "application/json".to_string()));
     }
 
     return attributs;
 } }
 
-pub fn set_attributs_header(_response: &mut Response<Body>, _http_code: u16) {
-    let attributs_headers = get_attributs_header(_http_code);
+pub fn set_attributs_header(_response: &mut Response<Body>, page_id: u16) {
+    let attributs_headers = get_attributs_header(page_id);
 
     for atrb in attributs_headers.iter() {
         let header_name = atrb.0.clone();
@@ -38,5 +60,21 @@ pub fn set_attributs_header(_response: &mut Response<Body>, _http_code: u16) {
 
         let header_name_static: &'static str = Box::leak(header_name.into_boxed_str());
         _response.headers_mut().insert(header_name_static, header_value);
+    }
+}
+
+pub fn get_page_id( uri: String ) -> u16{
+    println!("URI: {}", uri);
+
+    match uri.as_str() {
+        "/" => 1,
+        "/admin/" => 2,
+        "/admin/master/console/" => 3,
+        "/admin/master/console/config" => 4,
+        "/realms/master/protocol/openid-connect/3p-cookies/step1.html" => 5,
+        "/realms/master/protocol/openid-connect/3p-cookies/step2.html" => 6,
+        "/realms/master/protocol/openid-connect/auth" => 7,
+        "/realms/master/login-actions/authenticate" => 8,
+        _ => 0
     }
 }
