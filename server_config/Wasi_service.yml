@@ -1,0 +1,104 @@
+Service: wasi-server-service
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    field.cattle.io/publicEndpoints: >-
+      [{"addresses":["10.10.30.63"],"port":80,"protocol":"TCP","serviceName":"wasi-server-namespace:wasi-server-service","allNodes":false}]
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"wasi-server-service","namespace":"wasi-server-namespace"},"spec":{"ports":[{"port":80,"protocol":"TCP","targetPort":8080}],"selector":{"app":"wasi-server"}}}
+    metallb.universe.tf/ip-allocated-from-pool: first-pool
+  creationTimestamp: '2024-02-01T01:22:58Z'
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:metallb.universe.tf/ip-allocated-from-pool: {}
+        f:status:
+          f:loadBalancer:
+            f:ingress: {}
+      manager: controller
+      operation: Update
+      subresource: status
+      time: '2024-02-01T01:32:48Z'
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:finalizers:
+            .: {}
+            v:"service.kubernetes.io/load-balancer-cleanup": {}
+      manager: kube-vip-cloud-provider
+      operation: Update
+      subresource: status
+      time: '2024-02-01T01:32:48Z'
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:kubectl.kubernetes.io/last-applied-configuration: {}
+        f:spec:
+          f:internalTrafficPolicy: {}
+          f:ports:
+            .: {}
+            k:{"port":80,"protocol":"TCP"}:
+              .: {}
+              f:port: {}
+              f:protocol: {}
+          f:selector: {}
+          f:sessionAffinity: {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: '2024-02-01T01:40:18Z'
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:field.cattle.io/publicEndpoints: {}
+        f:spec:
+          f:allocateLoadBalancerNodePorts: {}
+          f:externalTrafficPolicy: {}
+          f:ports:
+            k:{"port":80,"protocol":"TCP"}:
+              f:targetPort: {}
+          f:type: {}
+      manager: rancher
+      operation: Update
+      time: '2024-02-01T03:13:48Z'
+  name: wasi-server-service
+  namespace: wasi-server-namespace
+  resourceVersion: '23864440'
+  uid: fe5d6424-af3e-4cf6-abe1-6a4fec9e9107
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: 10.43.140.87
+  clusterIPs:
+    - 10.43.140.87
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - nodePort: 31168
+      port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: wasi-server
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+      - ip: 10.10.30.63
+```
