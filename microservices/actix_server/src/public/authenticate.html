@@ -16,7 +16,7 @@
             <link href="/resources/2thr9/common/keycloak/lib/pficon/pficon.css" rel="stylesheet" />
             <link href="/resources/2thr9/login/keycloak/css/login.css" rel="stylesheet" />
             <link href="/resources/2thr9/login/keycloak/css/tile.css" rel="stylesheet" />
-<SCRIPT> if (typeof history.replaceState === 'function') {  history.replaceState({}, "some title", "http://localhost:{WEB_PORT}/realms/master/login-actions/authenticate?execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&client_id=security-admin-console&tab_id={TAB_ID}"); }</SCRIPT></head>
+<SCRIPT> if (typeof history.replaceState === 'function') {  history.replaceState({}, "some title", "http://{WEB_ADDR}:{WEB_PORT}/realms/master/login-actions/authenticate?execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&client_id=security-admin-console&tab_id={TAB_ID}"); }</SCRIPT></head>
 
 <body class="">
 <div class="login-pf-page">
@@ -36,7 +36,7 @@
 
     <div id="kc-form">
       <div id="kc-form-wrapper">
-            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="http://localhost:{WEB_PORT}/realms/master/login-actions/authenticate?session_code=qCIwRAQ5yK5rtnsHALh5G9RajHaVaqr1beXB8MT4IBk&amp;execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&amp;client_id=security-admin-console&amp;tab_id={TAB_ID}" method="post">
+            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="http://{WEB_ADDR}:{WEB_PORT}/realms/master/login-actions/authenticate?session_code=qCIwRAQ5yK5rtnsHALh5G9RajHaVaqr1beXB8MT4IBk&amp;execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&amp;client_id=security-admin-console&amp;tab_id={TAB_ID}" method="post">
                     <div class="form-group">
                         <label for="username" class="pf-c-form__label pf-c-form__label-text">Username or email</label>
 
