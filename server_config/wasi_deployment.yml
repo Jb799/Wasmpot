@@ -1,0 +1,170 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '4'
+    field.cattle.io/publicEndpoints: >-
+      [{"addresses":["10.10.30.63"],"port":80,"protocol":"TCP","serviceName":"wasi-server-namespace:wasi-server-service","allNodes":false}]
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"wasi-server-deployment","namespace":"wasi-server-namespace"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"wasi-server"}},"template":{"metadata":{"labels":{"app":"wasi-server"}},"spec":{"containers":[{"args":["8000","8888","actix-server"],"image":"wasmpot/wp2_wasi_server:beta","name":"wasi-server","ports":[{"containerPort":8000}]}]}}}}
+  creationTimestamp: '2024-02-01T03:06:01Z'
+  generation: 5
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:kubectl.kubernetes.io/last-applied-configuration: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:replicas: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:labels:
+                .: {}
+                f:app: {}
+            f:spec:
+              f:containers:
+                k:{"name":"wasi-server"}:
+                  .: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:ports:
+                    .: {}
+                    k:{"containerPort":8000,"protocol":"TCP"}:
+                      .: {}
+                      f:containerPort: {}
+                      f:protocol: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: '2024-02-01T03:06:01Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:field.cattle.io/publicEndpoints: {}
+        f:spec:
+          f:template:
+            f:spec:
+              f:containers:
+                k:{"name":"wasi-server"}:
+                  f:args: {}
+                  f:image: {}
+      manager: rancher
+      operation: Update
+      time: '2024-02-01T15:36:07Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: k3s
+      operation: Update
+      subresource: status
+      time: '2024-02-01T15:36:23Z'
+  name: wasi-server-deployment
+  namespace: wasi-server-namespace
+  resourceVersion: '24461337'
+  uid: 5e4877d2-7f08-4214-ad41-995127253702
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: wasi-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: wasi-server
+    spec:
+      containers:
+        - args:
+            - '8000'
+            - '8888'
+            - actix-service.wasi-server-namespace.svc.cluster.local
+          image: jb799/wp2_wasi_server:beta
+          imagePullPolicy: IfNotPresent
+          name: wasi-server
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2024-02-01T03:50:45Z'
+      lastUpdateTime: '2024-02-01T03:50:45Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+    - lastTransitionTime: '2024-02-01T03:06:02Z'
+      lastUpdateTime: '2024-02-01T15:36:23Z'
+      message: >-
+        ReplicaSet "wasi-server-deployment-66b58b59f5" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+  observedGeneration: 5
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
