@@ -1,0 +1,77 @@
+Service: actix-service 
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    field.cattle.io/publicEndpoints: 'null'
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"actix-service","namespace":"wasi-server-namespace"},"spec":{"ports":[{"port":8888,"protocol":"TCP","targetPort":8888}],"selector":{"app":"actix-server"}}}
+  creationTimestamp: '2024-02-01T02:25:46Z'
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:loadBalancer:
+            f:ingress: {}
+      manager: controller
+      operation: Update
+      subresource: status
+      time: '2024-02-01T02:42:30Z'
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:kubectl.kubernetes.io/last-applied-configuration: {}
+        f:spec:
+          f:internalTrafficPolicy: {}
+          f:ports:
+            .: {}
+            k:{"port":8888,"protocol":"TCP"}:
+              .: {}
+              f:port: {}
+              f:protocol: {}
+              f:targetPort: {}
+          f:sessionAffinity: {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: '2024-02-01T02:46:06Z'
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:field.cattle.io/publicEndpoints: {}
+        f:spec:
+          f:allocateLoadBalancerNodePorts: {}
+          f:externalTrafficPolicy: {}
+          f:selector: {}
+          f:type: {}
+      manager: rancher
+      operation: Update
+      time: '2024-02-01T03:58:27Z'
+  name: actix-service
+  namespace: wasi-server-namespace
+  resourceVersion: '23900441'
+  uid: 49f7b067-9605-44fa-84eb-dcd59dbaaa68
+spec:
+  clusterIP: 10.43.189.11
+  clusterIPs:
+    - 10.43.189.11
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - port: 8888
+      protocol: TCP
+      targetPort: 8888
+  selector:
+    app: actix-server
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
