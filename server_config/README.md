@@ -50,7 +50,7 @@ Cloud:Init :
 ## Open a firecracker vm
 
 1. Execute Get_ready_firecracker.sh
-2. In a new terminal execute Set_up_vm.sh
+2. In a new terminal execute Firecracker_vm.sh
 
 ## Deploy the honeypot 🚀
 
