@@ -56,5 +56,5 @@ Cloud:Init :
 
 1. Deploy wasi_service.yaml & actix_service.yaml with rancher
 2. Use the following command in the vm admin :
-   kubectl apply -f /home/ubuntu/actix_deployment.yaml
-   kubectl apply -f /home/ubuntu/wasi_deployment.yaml
+   * kubectl apply -f /home/ubuntu/actix_deployment.yaml
+   * kubectl apply -f /home/ubuntu/wasi_deployment.yaml
