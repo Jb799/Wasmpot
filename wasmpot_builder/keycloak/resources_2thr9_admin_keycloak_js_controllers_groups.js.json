@@ -1,0 +1,15 @@
+{
+  "url": "/resources/2thr9/admin/keycloak/js/controllers/groups.js",
+  "content_file": "public/resources/2thr9/admin/keycloak/js/controllers/groups.js",
+  "type": "GET",
+  "status_code": 200,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Cache-Control": "no-cache",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Type": "text/javascript;charset=UTF-8",
+    "transfer-encoding": "chunked"
+  }
+}

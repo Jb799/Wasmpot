@@ -1,0 +1,13 @@
+{
+  "url": "/admin",
+  "type": "GET",
+  "status_code": 302,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-XSS-Protection": "1; mode=block",
+    "X-Content-Type-Options": "nosniff",
+    "Location": "http://{ADDR}:{PORT}/admin/master/console/",
+    "content-length": "0"
+  }
+}

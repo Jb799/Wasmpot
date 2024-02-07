@@ -314,7 +314,7 @@ async fn main() -> std::io::Result<()> {
 
     println!("\n\x1B[32m---------------------------------------------\x1B[0m");
     println!("\x1B[1;32m####### ✨ WasmPot2 Resource Server ✨ #######\x1B[0m\n");
-    println!("\x1B[32m[📡] Listening on http://localhost:{}/\x1B[0m", web_port);
+    println!("\x1B[32m[📡] Listening on http://0.0.0.0:{}/\x1B[0m", web_port);
     println!("\x1B[32m[✅] Running !\x1B[0m");
     println!("\x1B[32m---------------------------------------------\x1B[0m\n\n");
 
