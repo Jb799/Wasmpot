@@ -1,4 +1,4 @@
-# Wasmpot: The First Keycloak-Based Honeypot 🐝
+# 🕸️ Wasmpot: The First Keycloak-Based Honeypot 🐝
 
 ## Overview 🌐
 Wasmpot is an innovative honeypot solution utilizing Keycloak for enhanced security. It's the first of its kind, designed to be highly effective in trapping and analyzing threats.
