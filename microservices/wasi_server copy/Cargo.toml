@@ -1,0 +1,12 @@
+[package]
+name = "wasi_server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hyper_wasi = { version = "0.15.2", features = ["full"]}
+tokio_wasi = { version = "1.21", features = ["rt", "macros", "net", "time", "io-util"]}
+lazy_static = "1.4"
+serde = { version = "1", features = ["derive"] }
+serde_urlencoded = "0.7"
+url = "2.5.0"
