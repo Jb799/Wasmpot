@@ -98,18 +98,11 @@ def save_endpoint(wp_folder, url, response, type):
         
         json.dump({
             'url': '/' + url,
-            'content_file': 'public/' + content_file_name,
+            'content_file': 'html/' + content_file_name,
             'type': type,
             'status_code': response.status_code,
             'headers': dict(response.headers),
         }, json_file, indent=2)
-
-def extract_links_from_js(wp_folder, js_content):
-    # Extraire les liens depuis le contenu JavaScript
-    js_links = re.findall(r'\b(?:https?|ftp)://\S+\b', js_content)
-    for js_link in js_links:
-        if urlparse(js_link).hostname in ['localhost', '127.0.0.1']:
-            explore_url(wp_folder, js_link)
 
 def extract_links_from_css(wp_folder, url, css_content):
     # Extraire les liens depuis le contenu CSS
@@ -125,6 +118,8 @@ def extract_links_from_css(wp_folder, url, css_content):
 
 def explore_url(wp_folder, url):
     if urlparse(url).hostname not in ['localhost', '127.0.0.1']:
+        print(urlparse(url).hostname)
+        print("Ignoring external URL:", url)
         return
 
     saved_url = url[21:] # Remove http://localhost:8000
@@ -179,9 +174,7 @@ def explore_url(wp_folder, url):
             save_content(wp_folder, saved_url, response.content, 'txt')
         
         # Extraire les liens depuis le contenu du fichier
-        if response.headers.get('Content-Type').startswith('text/javascript'):
-            extract_links_from_js(wp_folder, response.text)
-        elif response.headers.get('Content-Type').startswith('text/css'):
+        if response.headers.get('Content-Type').startswith('text/css'):
             extract_links_from_css(wp_folder, url, response.text)
 
     else:
@@ -196,8 +189,7 @@ def create_wp(wp_name):
         os.makedirs(wp_folder)
         print(f"Project [{wp_name}] created successfully.")
     else:
-        print(f"Project [{wp_name}] already exists.")
-        return -1
+        print(f"Project [{wp_name}] already exists, add contents...")
 
     return wp_folder
 
@@ -214,8 +206,10 @@ def main():
     
     wp_name = args[0]
     wp_address = args[1]
-    web_port = (wp_address.split(":")[2])[:4]
-    print(web_port)
+    web_port = (wp_address.split(":")[-1])
+
+    if not "http://" in wp_address[:7]:
+        wp_address = "http://" + wp_address
 
     wp_folder = create_wp(wp_name)
 

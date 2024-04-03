@@ -1,4 +1,5 @@
-- Enlever les querys parameters des noms de fichier (split('?')[0])
-- Modifier localhost par {ADDR} et port par {PORT} dans tous les contents et headers !
 - Ajouter POST ou GET pour chaque json
-- Ajouter système d'envoie de request post pour les formulaires et modifications de querys parameters
+- Ajouter système d'envoie de request post pour les formulaires et modifications 
+    de querys parameters
+- Pour index "/" enlever le "//" et mettre "/".
+- Changer les public/ des fichiers html par html/
