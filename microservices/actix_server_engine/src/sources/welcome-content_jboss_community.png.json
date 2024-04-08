@@ -1,0 +1,16 @@
+{
+  "url": "/welcome-content/jboss_community.png",
+  "content_file": "html/welcome-content/jboss_community.png",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Cache-Control": "no-cache",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Type": "image/png",
+    "content-length": "3204"
+  }
+}

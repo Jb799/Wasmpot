@@ -1,0 +1,21 @@
+{
+  "url": "/realms/master/protocol/openid-connect/auth",
+  "content_file": "html/auth.html",
+  "type": "GET",
+  "query_params": "client_id=security-admin-console&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fadmin%2Fmaster%2Fconsole%2F&state=b210731a-89cc-4f6b-aa08-3463a34f95c1&response_mode=fragment&response_type=code&scope=openid&nonce=8b2b2b3c-fab7-4b54-889a-d0a35381ca68&code_challenge=p27cUcPR2PytfvT1w64V5ZHzHRlct3I6t3sQV25H01Y&code_challenge_method=S256",
+  "status_code": 200,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Robots-Tag": "none",
+    "Cache-Control": "no-store, must-revalidate, max-age=0",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
+    "Set-Cookie": "AUTH_SESSION_ID=c0bc969c-d047-46dc-b0a4-e035edf0eccf; Version=1; Path=/realms/master/; SameSite=None; Secure; HttpOnly, AUTH_SESSION_ID_LEGACY=c0bc969c-d047-46dc-b0a4-e035edf0eccf; Version=1; Path=/realms/master/; HttpOnly, KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJlNWVlZWYyZC1hYjUxLTQ1Y2ItYjJlMC0wNDlkYjhmMzg2ZTgifQ.eyJjaWQiOiJzZWN1cml0eS1hZG1pbi1jb25zb2xlIiwicHR5Ijoib3BlbmlkLWNvbm5lY3QiLCJydXJpIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgwL2FkbWluL21hc3Rlci9jb25zb2xlLyIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7InNjb3BlIjoib3BlbmlkIiwiaXNzIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgwL3JlYWxtcy9tYXN0ZXIiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6IlMyNTYiLCJyZWRpcmVjdF91cmkiOiJodHRwOi8vMTI3LjAuMC4xOjgwODAvYWRtaW4vbWFzdGVyL2NvbnNvbGUvIiwic3RhdGUiOiJiMjEwNzMxYS04OWNjLTRmNmItYWEwOC0zNDYzYTM0Zjk1YzEiLCJub25jZSI6IjhiMmIyYjNjLWZhYjctNGI1NC04ODlhLWQwYTM1MzgxY2E2OCIsImNvZGVfY2hhbGxlbmdlIjoicDI3Y1VjUFIyUHl0ZnZUMXc2NFY1Wkh6SFJsY3QzSTZ0M3NRVjI1SDAxWSIsInJlc3BvbnNlX21vZGUiOiJmcmFnbWVudCJ9fQ.tQh4GHyzn_6cj_l8DOquZ4HT41N35WBwwcauE2NEQ3A; Version=1; Path=/realms/master/; HttpOnly",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Language": "en",
+    "Content-Type": "text/html;charset=utf-8",
+    "content-length": "3550"
+  }
+}

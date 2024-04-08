@@ -1,5 +1,7 @@
-- Ajouter POST ou GET pour chaque json
 - Ajouter système d'envoie de request post pour les formulaires et modifications 
     de querys parameters
-- Pour index "/" enlever le "//" et mettre "/".
-- Changer les public/ des fichiers html par html/
+
+
+
+KEYCLOAK ENDPOINTS:
+http://localhost:8080/realms/master/protocol/openid-connect/auth?client_id=security-admin-console&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fadmin%2Fmaster%2Fconsole%2F&state=d79321ff-6552-4276-a9a7-4cd2cdc2c81a&response_mode=fragment&response_type=code&scope=openid&nonce=00e4712e-0fe4-46ef-81b6-7c506fcd67d2&code_challenge=sfwwlf1u2bh7HyXETzV-C6a134pB88ctAS5-MJ1XB8w&code_challenge_method=S256

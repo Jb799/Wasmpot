@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="login-pf">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+
+            <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Sign in to Keycloak</title>
+    <link rel="icon" href="/resources/2thr9/login/keycloak/img/favicon.ico" />
+            <link href="/resources/2thr9/common/keycloak/web_modules/@patternfly/react-core/dist/styles/base.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/web_modules/@patternfly/react-core/dist/styles/app.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/node_modules/patternfly/dist/css/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/node_modules/patternfly/dist/css/patternfly-additions.min.css" rel="stylesheet" />
+            <link href="/resources/2thr9/common/keycloak/lib/pficon/pficon.css" rel="stylesheet" />
+            <link href="/resources/2thr9/login/keycloak/css/login.css" rel="stylesheet" />
+            <link href="/resources/2thr9/login/keycloak/css/tile.css" rel="stylesheet" />
+</head>
+
+<body class="">
+<div class="login-pf-page">
+    <div id="kc-header" class="login-pf-page-header">
+        <div id="kc-header-wrapper"
+             class=""><div class="kc-logo-text"><span>Keycloak</span></div></div>
+    </div>
+    <div class="card-pf">
+        <header class="login-pf-header">
+                <h1 id="kc-page-title">        Logging out
+</h1>
+      </header>
+      <div id="kc-content">
+        <div id="kc-content-wrapper">
+
+
+        <div id="kc-logout-confirm" class="content-area">
+            <p class="instruction">Do you want to logout?</p>
+
+            <form class="form-actions" action="/realms/master/protocol/openid-connect/logout/logout-confirm?client_id=account&amp;tab_id=uHuYxEZqd8Y" method="POST">
+                <input type="hidden" name="session_code" value="-d1Ey9mVMGuQ7JIplBhciI32Rpi3Eyw3Tjz7eDPDy3w">
+                <div class="form-group">
+                    <div id="kc-form-options">
+                        <div class="">
+                        </div>
+                    </div>
+
+                    <div id="kc-form-buttons" class="form-group">
+                        <input tabindex="4"
+                               class="pf-c-button pf-m-primary pf-m-block btn-lg"
+                               name="confirmLogout" id="kc-logout" type="submit" value="Logout"/>
+                    </div>
+
+                </div>
+            </form>
+
+            <div id="kc-info-message">
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

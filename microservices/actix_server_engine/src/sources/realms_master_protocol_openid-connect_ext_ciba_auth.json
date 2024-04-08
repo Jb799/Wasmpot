@@ -1,0 +1,16 @@
+{
+  "url": "/realms/master/protocol/openid-connect/ext/ciba/auth",
+  "content_file": "html/auth.html",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 405,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Type": "application/json",
+    "content-length": "90"
+  }
+}

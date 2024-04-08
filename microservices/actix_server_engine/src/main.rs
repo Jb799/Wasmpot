@@ -11,6 +11,10 @@ use std::error::Error;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 
+use flate2::write::GzEncoder;
+use flate2::Compression;
+use std::io::prelude::*;
+
 #[derive(Clone)]
 struct Endpoints {
     url: String,
@@ -92,24 +96,41 @@ async fn get_endpoints() -> Vec<Endpoints> {
 }
 
 async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>, web_wasi_addr: web::Data<String>, endpoints: web::Data<Arc<Mutex<Vec<Endpoints>>>>) -> Result<HttpResponse> {
-    let requested_path = req.uri().path().to_owned();
+    let mut requested_path = req.uri().path().to_owned();
     let endpoints = endpoints.lock().unwrap();
+
+    // Remove trailing slash from the requested path
+    if requested_path.len() > 1 {
+        if let Some(stripped) = requested_path.strip_suffix("/") {
+            requested_path = stripped.to_string();
+        }
+    }
 
     println!("\x1B[34m[🌐] Requested path: {}\x1B[0m", requested_path);
 
     for endpoint in endpoints.iter() {
         if endpoint.url == requested_path {
+            println!("\x1B[32m[✅] Endpoint found: {}\x1B[0m", endpoint.url);
+
             let status = StatusCode::from_u16(endpoint.status_code).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
             let mut response = HttpResponse::build(status);
 
             for header in &endpoint.headers {
-                response.insert_header((header[0].to_string(), header[1].to_string()));
+                let mut header_rep = header[1].to_string();
+                header_rep = header_rep.replace("{PORT}", &web_wasi_port.to_string());
+                header_rep = header_rep.replace("{ADDR}", &web_wasi_addr.to_string());
+
+                response.insert_header((header[0].to_string(), header_rep.clone()));
+
+                println!("\x1B[32m[✅] Header: {} -> {}\x1B[0m", header[0], header_rep);
             }
+
+            println!("\x1B[32m[✅] Status code: {}\x1B[0m", endpoint.status_code);
 
             if !endpoint.content_file.is_empty() {
                 println!("\x1B[32m[✅] Content file found: {}\x1B[0m", "./src/sources/".to_owned() + &endpoint.content_file);
-                
-                let file_content = fs::read("./src/sources/".to_owned() + &endpoint.content_file).await?;
+
+                let mut file_content = fs::read("./src/sources/".to_owned() + &endpoint.content_file).await?;
 
                 if let Some(extension) = Path::new(&endpoint.content_file).extension() {
                     if let Some(extension_str) = extension.to_str() {
@@ -118,17 +139,28 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
                             str_content = str_content.replace("{PORT}", &web_wasi_port.to_string());
                             str_content = str_content.replace("{ADDR}", &web_wasi_addr.to_string());
 
-                            return Ok(response.body(str_content));
+                            file_content = str_content.as_bytes().to_vec();
                         }
                     }
                 }
 
-                return Ok(response.body(file_content));
+                let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
+                let is_gzip = endpoint.headers.iter().any(|header| header[0] == "Content-Encoding" && header[1].to_lowercase() == "gzip");
+
+                if is_gzip {
+                    encoder.write_all(&file_content)?;
+                    let compressed_content = encoder.finish()?;
+                    return Ok(response.body(compressed_content));
+                } else {
+                    return Ok(response.body(file_content));
+                }
             }else{
                 return Ok(response.finish());
             }
         }
     }
+
+    println!("\x1B[31m[❌] Endpoint not found\x1B[0m");
 
     // Return 404 if no endpoint is found, use the default 404 page:
     let path = "./src/sources/html/404.html";
@@ -146,7 +178,7 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let web_port: u16 = env::var("WEB_PORT").unwrap_or("8888".to_string()).parse().unwrap();
-    let web_wasi_port: u16 = env::var("WEB_WASI_PORT").unwrap_or("8000".to_string()).parse().unwrap();
+    let web_wasi_port: u16 = env::var("WEB_WASI_PORT").unwrap_or("8888".to_string()).parse().unwrap(); // .unwrap_or("8000".to_string()).parse().unwrap();
     let web_wasi_addr: String = env::var("WEB_ADDR").unwrap_or("localhost".to_string()).parse().unwrap();
 
     // Endpoints initialization:
