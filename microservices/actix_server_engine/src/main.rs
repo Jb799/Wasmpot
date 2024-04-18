@@ -121,11 +121,7 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
                 header_rep = header_rep.replace("{ADDR}", &web_wasi_addr.to_string());
 
                 response.insert_header((header[0].to_string(), header_rep.clone()));
-
-                println!("\x1B[32m[✅] Header: {} -> {}\x1B[0m", header[0], header_rep);
             }
-
-            println!("\x1B[32m[✅] Status code: {}\x1B[0m", endpoint.status_code);
 
             if !endpoint.content_file.is_empty() {
                 println!("\x1B[32m[✅] Content file found: {}\x1B[0m", "./src/sources/".to_owned() + &endpoint.content_file);
@@ -138,7 +134,6 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
                             let mut str_content = String::from_utf8_lossy(&file_content).to_string();
                             str_content = str_content.replace("{PORT}", &web_wasi_port.to_string());
                             str_content = str_content.replace("{ADDR}", &web_wasi_addr.to_string());
-
                             file_content = str_content.as_bytes().to_vec();
                         }
                     }
