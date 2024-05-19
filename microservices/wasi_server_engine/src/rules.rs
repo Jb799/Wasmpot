@@ -32,7 +32,7 @@ pub struct Rule {
 pub fn get_rules() -> Vec<Rule> {
     vec![
         Rule {
-            url: String::from("https://example.com/api/data"),
+            url: String::from("/api/data"),
             method: Method::GET,
             query_params: vec![
                 Param {
@@ -40,7 +40,7 @@ pub fn get_rules() -> Vec<Rule> {
                     name: String::from("user_id"),
                     value: ParamValue::Regex(Regex::new(r"^\d+$").unwrap()),
                     flag: 5,
-                    redirect: Some(String::from("https://example.com/error")),
+                    redirect: Some(String::from("/error")),
                 },
                 Param {
                     id: 2,
@@ -53,7 +53,7 @@ pub fn get_rules() -> Vec<Rule> {
             data_params: vec![],
         },
         Rule {
-            url: String::from("https://example.com/api/submit"),
+            url: String::from("/api/submit"),
             method: Method::POST,
             query_params: vec![],
             data_params: vec![
@@ -62,7 +62,7 @@ pub fn get_rules() -> Vec<Rule> {
                     name: String::from("content"),
                     value: ParamValue::Regex(Regex::new(r"^[\w\s]+$").unwrap()),
                     flag: 7,
-                    redirect: Some(String::from("https://example.com/content_error")),
+                    redirect: Some(String::from("/content_error")),
                 },
             ],
         },

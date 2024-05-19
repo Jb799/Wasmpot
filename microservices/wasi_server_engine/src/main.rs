@@ -142,12 +142,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let addr = SocketAddr::from(([0, 0, 0, 0], web_port));
     let listener = TcpListener::bind(addr).await?;
 
-    println!("\n\x1B[32m---------------------------------------------\x1B[0m");
-    println!("\x1B[1;32m####### 🐝 WasmPot2 Wasi Server 🐝 #######\x1B[0m\n");
-    println!("\x1B[32m[📡] Listening on http://{:?}/\x1B[0m", addr);
-    println!("\x1B[32m[📡] Connected with http://{}:{}/\x1B[0m", web_res_name, web_res_port);
-    println!("\x1B[32m[✅] Running !\x1B[0m");
-    println!("\x1B[32m---------------------------------------------\x1B[0m\n\n");
+    println!("Timestamp,ID,FLAG,Endpoint,Payload,IP,Latitude,Longitude");
 
     loop {
         let (stream, _) = listener.accept().await?;
