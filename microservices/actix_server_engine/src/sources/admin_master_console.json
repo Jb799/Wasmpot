@@ -11,7 +11,7 @@
     "X-Robots-Tag": "none",
     "Cache-Control": "no-cache",
     "X-Content-Type-Options": "nosniff",
-    "Content-Security-Policy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
+    "Content-Security-Policy": "frame-src 'self' https://keycloak.wasmpot2.win; frame-ancestors 'self' https://keycloak.wasmpot2.win; object-src 'none';",
     "X-XSS-Protection": "1; mode=block",
     "Content-Language": "en",
     "Content-Type": "text/html;charset=utf-8",
