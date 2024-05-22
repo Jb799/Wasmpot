@@ -1,0 +1,20 @@
+{
+  "url": "/realms/master/login-actions/authenticate",
+  "content_file": "html/authenticate.html",
+  "type": "GET",
+  "query_params": "session_code=VLqfedX7IbNB11yIVeFLphGi8TiNqcqzIoXeHiXhnI8&execution=4adb81d3-5be0-43cd-aedf-af7e6d299095&client_id=security-admin-console&tab_id=FXY9ezw36vw",
+  "status_code": 400,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Robots-Tag": "none",
+    "Cache-Control": "no-store, must-revalidate, max-age=0",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Language": "en",
+    "Content-Type": "text/html;charset=utf-8",
+    "content-length": "2037"
+  }
+}

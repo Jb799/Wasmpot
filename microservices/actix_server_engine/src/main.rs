@@ -83,15 +83,6 @@ async fn get_endpoints() -> Vec<Endpoints> {
         }
     }
 
-    // let new_endpoint = Endpoints {
-    //     path: "/".to_string(),
-    //     content_path: "/html/index.html".to_string(),
-    //     req_type: "GET".to_string(),
-    //     status_code: 200,
-    //     headers: vec![vec!["content-type".to_string(), "text/html".to_string()]],
-    // };
-    // endpoints.push(new_endpoint);
-
     endpoints
 }
 
@@ -173,7 +164,7 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let web_port: u16 = env::var("WEB_PORT").unwrap_or("8888".to_string()).parse().unwrap();
-    let web_wasi_port: u16 = env::var("WEB_WASI_PORT").unwrap_or("8888".to_string()).parse().unwrap();
+    let web_wasi_port: u16 = env::var("WEB_WASI_PORT").unwrap_or("8000".to_string()).parse().unwrap();
     let web_wasi_addr: String = env::var("WEB_ADDR").unwrap_or("localhost".to_string()).parse().unwrap();
 
     // Endpoints initialization:
