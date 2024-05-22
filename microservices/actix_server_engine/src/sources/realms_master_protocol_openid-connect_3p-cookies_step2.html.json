@@ -1,0 +1,19 @@
+{
+  "url": "/realms/master/protocol/openid-connect/3p-cookies/step2.html",
+  "content_file": "html/step2.html",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Robots-Tag": "none",
+    "Cache-Control": "no-cache, must-revalidate, no-transform, no-store",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "frame-src 'self'; object-src 'none';",
+    "P3P": "CP=\"This is not a P3P policy!\"",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Type": "text/html;charset=utf-8",
+    "content-length": "1142"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "url": "/resources/2thr9/account/keycloak.v2/img/socialmedia/socialmedia_icons_stack_transparent.svg",
+  "content_file": "html/resources/2thr9/account/keycloak.v2/img/socialmedia/socialmedia_icons_stack_transparent.svg",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Cache-Control": "no-cache",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Type": "image/svg+xml",
+    "content-length": "1038"
+  }
+}

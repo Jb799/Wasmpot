@@ -1,0 +1,13 @@
+{
+  "url": "/resources/2thr9/common/keycloak/web_modules/@patternfly/react-core/assets/images/pfbg_2000.jpg",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 404,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-XSS-Protection": "1; mode=block",
+    "X-Content-Type-Options": "nosniff",
+    "content-length": "0"
+  }
+}
