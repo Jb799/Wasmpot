@@ -163,16 +163,36 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
 /* ############## MAIN FUNCTION ############## */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let web_port: u16 = env::var("WEB_PORT").unwrap_or("8888".to_string()).parse().unwrap();
-    let web_wasi_port: u16 = env::var("WEB_WASI_PORT").unwrap_or("8000".to_string()).parse().unwrap();
-    let web_wasi_addr: String = env::var("WEB_ADDR").unwrap_or("localhost".to_string()).parse().unwrap();
+    let args: Vec<String> = env::args().collect();
+    let mut web_port: u16 = 8888;
+    let mut web_wasi_port: u16 = 8000;
+    let mut web_wasi_addr: String = "localhost".to_string();
+
+    if args.len() >= 4 {
+        if let Ok(port) = args[1].parse::<u16>() {
+            web_port = port;
+        } else {
+            println!("Invalid value for ACTIX_PORT");
+        }
+    
+        if let Ok(wasi_port) = args[2].parse::<u16>() {
+            web_wasi_port = wasi_port;
+        } else {
+            println!("Invalid value for WASI_PORT");
+        }
+    
+        web_wasi_addr = args[3].clone();
+    } else {
+        println!("Missing arguments (ACTIX_PORT, WASI_PORT, WASI_NAME)");
+    }
 
     // Endpoints initialization:
     let endpoints: Arc<Mutex<Vec<Endpoints>>> = Arc::new(Mutex::new(get_endpoints().await));
 
     println!("\n\x1B[32m---------------------------------------------\x1B[0m");
     println!("\x1B[1;32m####### ✨ WasmPot2 Resource Server ✨ #######\x1B[0m\n");
-    println!("\x1B[32m[📡] Listening on http://{}:{}/\x1B[0m", web_wasi_addr, web_port);
+    println!("\x1B[32m[📡] Listening on http://0.0.0.0:{}/\x1B[0m", web_port);
+    println!("\x1B[32m[📡] Redirect on http://{}:{}/\x1B[0m", web_wasi_addr, web_wasi_port);
     println!("\x1B[32m[✅] Running !\x1B[0m");
     println!("\x1B[32m---------------------------------------------\x1B[0m\n\n");
 
@@ -185,7 +205,7 @@ async fn main() -> std::io::Result<()> {
                 web::route().to(default_api)
             )
     })
-    .bind(("0.0.0.0", web_port))?
+    .bind(("0.0.0.0", web_port)).expect("REASON")
     .run()
     .await
 }

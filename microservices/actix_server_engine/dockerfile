@@ -32,9 +32,6 @@ FROM ubuntu:latest
 COPY --from=builder /usr/local/cargo/bin/wasmpot2_src /usr/local/bin/wasmpot2_src
 COPY ./src/sources ./src/sources
 
-# Set environment variables
-ENV ACTIX_PORT=8888 WASI_PORT=8000 WASI_ADDR="localhost"
-
 # Expose port
 EXPOSE $ACTIX_PORT
 
