@@ -36,9 +36,6 @@ struct LogEntry {
     flag: u8,
     path: String,
     query_string: String,
-    ip: String,
-    latitude: f64,
-    longitude: f64,
 }
 
 async fn fetch_resource(path: &str, web_res_port: u16, web_res_name: String) -> Result<Response<Body>, hyper::Error> {
@@ -84,12 +81,9 @@ async fn display_logs(query_pairs: &HashMap<String, String>, param: &Param, path
         flag: param.flag.clone(),
         path: path.to_string(),
         query_string: query_string.clone(),
-        ip: "127.0.0.1".to_string(),
-        latitude: 0.0,
-        longitude: 0.0,
     };
 
-    println!("{:?},{:?},{:?},{:?},{:?},{:?},{:?},{:?}", paris_now, param.id, param.flag, path, query_string, "127.0.0.1", 0.0, 0.0);
+    println!("{:?},{:?},{:?},{:?},{:?}", paris_now, param.id, param.flag, path, query_string);
 
     let client = Client::new();
 
@@ -230,7 +224,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let addr = SocketAddr::from(([0, 0, 0, 0], wasi_port));
     let listener = TcpListener::bind(addr).await?;
 
-    println!("Timestamp,ID,FLAG,Endpoint,Payload,IP,Latitude,Longitude");
+    println!("Timestamp,ID,FLAG,Endpoint,Payload");
 
     loop {
         let (stream, remote_addr) = listener.accept().await?;

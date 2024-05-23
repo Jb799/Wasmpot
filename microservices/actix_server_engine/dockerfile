@@ -15,9 +15,10 @@ COPY ./Cargo.toml ./Cargo.toml
 # Build only the dependencies to cache them
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
+# Remove placeholder source files
 RUN rm src/*.rs
 
-# Now that the dependency is built, copy your source code
+# Copy actual source code
 COPY ./src ./src
 
 # Build for release.
@@ -32,8 +33,13 @@ FROM ubuntu:latest
 COPY --from=builder /usr/local/cargo/bin/wasmpot2_src /usr/local/bin/wasmpot2_src
 COPY ./src/sources ./src/sources
 
-# Expose port
+# Environment variables
+ENV ACTIX_PORT 8888
+ENV WASI_PORT 8000
+ENV WASI_ADDR "localhost"
+
+# Expose port based on environment variable
 EXPOSE $ACTIX_PORT
 
-# Set default command
-CMD ["/usr/local/bin/wasmpot2_src"]
+# Use ENTRYPOINT to pass environment variables as arguments
+ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/wasmpot2_src $ACTIX_PORT $WASI_PORT $WASI_ADDR"]

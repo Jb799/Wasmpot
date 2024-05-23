@@ -25,7 +25,7 @@ def get_rotating_file_handler():
     # Si le fichier est vide, ajoutez l'en-tête
     if file_empty:
         with open(log_filename, 'a') as log_file:
-            log_file.write("Timestamp,ID,FLAG,Endpoint,Payload,IP,Latitude,Longitude\n")
+            log_file.write("Timestamp,ID,FLAG,Endpoint,Payload\n")
     
     return handler
 
@@ -35,7 +35,7 @@ def save_log():
     handler = get_rotating_file_handler()
 
     # Convertir le log en ligne CSV
-    csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},{log_line["path"]},"{log_line["query_string"]}",{log_line["ip"]},{log_line["latitude"]},{log_line["longitude"]}\n'
+    csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},{log_line["path"]},"{log_line["query_string"]}"\n'
 
     print(csv_line)
 
