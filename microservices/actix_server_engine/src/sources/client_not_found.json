@@ -1,0 +1,19 @@
+{
+  "url": "/auth/err-client-not-found",
+  "content_file": "html/client-not-found.html",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 400,
+  "headers": {
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Robots-Tag": "none",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "frame-src 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; frame-ancestors 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; object-src 'none';",
+    "X-XSS-Protection": "1; mode=block",
+    "Content-Language": "en",
+    "Content-Type": "text/html;charset=utf-8",
+    "content-length": "1852"
+  }
+}
