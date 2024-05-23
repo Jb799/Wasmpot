@@ -35,7 +35,7 @@ COPY ./src/sources ./src/sources
 
 # Environment variables
 ENV ACTIX_PORT 8888
-ENV WASI_PORT 8000
+ENV WASI_PORT 0
 ENV WASI_ADDR "localhost"
 
 # Expose port based on environment variable

@@ -2,6 +2,20 @@ use hyper::{Body, Request, Response, StatusCode};
 use hyper::header::HeaderValue;
 use std::collections::HashMap;
 use regex::Regex;
+use lazy_static::lazy_static;
+
+#[derive(Debug, Clone)]
+pub enum ResponseModification {
+    Replace { placeholder: String, param_name: String },
+    Sanitize { param_name: String, regex: Regex },
+}
+
+#[derive(Debug, Clone)]
+pub struct ResponseRule {
+    pub url: String,
+    pub method: MethodType,
+    pub modifications: Vec<ResponseModification>,
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum MethodType {
@@ -79,6 +93,29 @@ pub fn get_rules() -> Vec<Rule> {
                     flag: 7,
                     redirect: Some(String::from("/content_error")),
                     required: false,
+                },
+            ],
+        },
+    ]
+}
+
+lazy_static! {
+    static ref XSS_FILTER_REGEX: Regex = Regex::new(r#"[<>&"']"#).unwrap();
+}
+
+pub fn get_response_rules() -> Vec<ResponseRule> {
+    vec![
+        ResponseRule {
+            url: "/realms/master/login-actions/authenticate".to_string(),
+            method: MethodType::POST,
+            modifications: vec![
+                ResponseModification::Replace {
+                    placeholder: "{USERNAME}".to_string(),
+                    param_name: "username".to_string(),
+                },
+                ResponseModification::Sanitize {
+                    param_name: "username".to_string(),
+                    regex: XSS_FILTER_REGEX.clone(),
                 },
             ],
         },

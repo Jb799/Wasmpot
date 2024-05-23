@@ -15,6 +15,9 @@ use chrono::{DateTime, Utc, Duration, Datelike, Timelike};
 use url::form_urlencoded;
 use once_cell::sync::Lazy;
 use tokio::sync::Mutex;
+use std::cmp::{PartialOrd, Ordering};
+use std::option::Option;
+use std::result::Result;
 
 mod rules;
 use rules::{MethodType, ParamValue, Param, get_rules};
@@ -137,6 +140,19 @@ async fn extract_body_params(req: &mut Request<Body>) -> HashMap<String, String>
     form_urlencoded::parse(&whole_body).into_owned().collect()
 }
 
+async fn apply_response_filters(mut response: Response<Body>, params: &HashMap<String, String>) -> Response<Body> {
+    let body_bytes = hyper::body::to_bytes(response.body_mut()).await.unwrap();
+    let mut body = String::from_utf8(body_bytes.to_vec()).unwrap();
+
+    for (key, value) in params {
+        body = body.replace(&format!("{{{{{}}}}}", key), value);
+    }
+
+    *response.body_mut() = Body::from(body);
+    response
+}
+
+
 async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, admin_name: String, admin_port: u16) -> Result<Response<Body>, hyper::Error> {
     let method = if req.method() == &Method::GET { MethodType::GET } else { MethodType::POST };
     let path = req.uri().path().to_owned();
@@ -145,41 +161,48 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
     let rules = RULES.lock().await;
     let mut params = HashMap::new();
 
-    if !is_static_resource(req.uri()) {
-        if let Some(rule) = rules.iter().find(|rule| &rule.url == &path && rule.method == method) {
-            if method == MethodType::POST {
-                params = extract_body_params(&mut req).await;
-            } else {
-                params = query_string.split('&').filter_map(|pair| {
-                    let (key, value) = pair.split_once('=').unwrap_or((pair, ""));
-                    Some((key.to_string(), value.to_string()))
-                }).collect::<HashMap<_, _>>();
-            }
+    // Identify if the request matches any of the rules
+    if let Some(rule) = rules.iter().find(|rule| &rule.url == &path && rule.method == method) {
+        if method == MethodType::POST {
+            params = extract_body_params(&mut req).await;
+        } else {
+            params = query_string.split('&').filter_map(|pair| {
+                let (key, value) = pair.split_once('=').unwrap_or((pair, ""));
+                Some((key.to_string(), value.to_string()))
+            }).collect::<HashMap<_, _>>();
+        }
 
-            for param in &rule.query_params {
-                match params.get(&param.name) {
-                    Some(value) if is_value_valid(&param.value, value) => continue,
-                    Some(_) if !param.required => continue,
-                    None if param.required => {
-                        display_logs(&params, param, &path, admin_name.clone(), admin_port).await;
-                        if let Some(redirect_url) = &param.redirect {
-                            return Ok(redirect_response(redirect_url));
-                        }
-                        break;
-                    },
-                    _ => {
-                        display_logs(&params, param, &path, admin_name.clone(), admin_port).await;
-                        if let Some(redirect_url) = &param.redirect {
-                            return Ok(redirect_response(redirect_url));
-                        }
-                        break;
+        for param in &rule.query_params {
+            match params.get(&param.name) {
+                Some(value) if is_value_valid(&param.value, value) => {
+                    if let ParamValue::Regex(regex) = &param.value {
+                        let sanitized_value = regex.replace_all(value, "").to_string();
+                        params.insert(param.name.clone(), sanitized_value);
                     }
+                    continue;
+                },
+                Some(_) if !param.required => continue,
+                None if param.required => {
+                    display_logs(&params, param, &path, admin_name.clone(), admin_port).await;
+                    if let Some(redirect_url) = &param.redirect {
+                        return Ok(redirect_response(redirect_url));
+                    }
+                    break;
+                },
+                _ => {
+                    display_logs(&params, param, &path, admin_name.clone(), admin_port).await;
+                    if let Some(redirect_url) = &param.redirect {
+                        return Ok(redirect_response(redirect_url));
+                    }
+                    break;
                 }
             }
         }
     }
 
-    fetch_resource(&path, web_res_port, web_res_name).await
+    let response = fetch_resource(&path, web_res_port, web_res_name).await?;
+    let filtered_response = apply_response_filters(response, &params).await;
+    Ok(filtered_response)
 }
 
 #[tokio::main(flavor = "current_thread")]
@@ -205,7 +228,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             println!("Invalid value for ACTIX_PORT");
             return Err("Invalid value for ACTIX_PORT".into());
         }
-    
+        
         actix_name = args[3].clone();
 
         if let Ok(arg_admin_port) = args[4].parse::<u16>() {

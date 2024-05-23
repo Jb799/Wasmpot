@@ -108,7 +108,14 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
 
             for header in &endpoint.headers {
                 let mut header_rep = header[1].to_string();
-                header_rep = header_rep.replace("{PORT}", &web_wasi_port.to_string());
+
+                if *web_wasi_port == 0.into(){
+                    header_rep = header_rep.replace("http://", "https://");
+                    header_rep = header_rep.replace(":{PORT}", "");
+                }else{
+                    header_rep = header_rep.replace("{PORT}", &web_wasi_port.to_string());
+                }
+
                 header_rep = header_rep.replace("{ADDR}", &web_wasi_addr.to_string());
 
                 response.insert_header((header[0].to_string(), header_rep.clone()));
@@ -123,7 +130,14 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
                     if let Some(extension_str) = extension.to_str() {
                         if extension_str == "html" || extension_str == "css" || extension_str == "js" {
                             let mut str_content = String::from_utf8_lossy(&file_content).to_string();
-                            str_content = str_content.replace("{PORT}", &web_wasi_port.to_string());
+
+                            if *web_wasi_port == 0.into(){
+                                str_content = str_content.replace("http://", "https://");
+                                str_content = str_content.replace(":{PORT}", "");
+                            }else{
+                                str_content = str_content.replace("{PORT}", &web_wasi_port.to_string());
+                            }
+
                             str_content = str_content.replace("{ADDR}", &web_wasi_addr.to_string());
                             file_content = str_content.as_bytes().to_vec();
                         }
@@ -165,7 +179,7 @@ async fn default_api(req: actix_web::HttpRequest, web_wasi_port: web::Data<u16>,
 async fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let mut web_port: u16 = 8888;
-    let mut web_wasi_port: u16 = 8000;
+    let mut web_wasi_port: u16 = 0;
     let mut web_wasi_addr: String = "localhost".to_string();
 
     if args.len() >= 4 {

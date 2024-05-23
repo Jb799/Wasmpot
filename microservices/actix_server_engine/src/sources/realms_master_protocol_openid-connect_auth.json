@@ -11,7 +11,7 @@
     "X-Robots-Tag": "none",
     "Cache-Control": "no-store, must-revalidate, max-age=0",
     "X-Content-Type-Options": "nosniff",
-    "Content-Security-Policy": "frame-src 'self' https://keycloak.wasmpot2.win; frame-ancestors 'self' https://keycloak.wasmpot2.win; object-src 'none';",
+    "Content-Security-Policy": "frame-src 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; frame-ancestors 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; object-src 'none';",
     "Set-Cookie": "AUTH_SESSION_ID=c0bc969c-d047-46dc-b0a4-e035edf0eccf; Version=1; Path=/realms/master/; SameSite=None; Secure; HttpOnly, AUTH_SESSION_ID_LEGACY=c0bc969c-d047-46dc-b0a4-e035edf0eccf; Version=1; Path=/realms/master/; HttpOnly, KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJlNWVlZWYyZC1hYjUxLTQ1Y2ItYjJlMC0wNDlkYjhmMzg2ZTgifQ.eyJjaWQiOiJzZWN1cml0eS1hZG1pbi1jb25zb2xlIiwicHR5Ijoib3BlbmlkLWNvbm5lY3QiLCJydXJpIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgwL2FkbWluL21hc3Rlci9jb25zb2xlLyIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7InNjb3BlIjoib3BlbmlkIiwiaXNzIjoiaHR0cDovLzEyNy4wLjAuMTo4MDgwL3JlYWxtcy9tYXN0ZXIiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6IlMyNTYiLCJyZWRpcmVjdF91cmkiOiJodHRwOi8vMTI3LjAuMC4xOjgwODAvYWRtaW4vbWFzdGVyL2NvbnNvbGUvIiwic3RhdGUiOiJiMjEwNzMxYS04OWNjLTRmNmItYWEwOC0zNDYzYTM0Zjk1YzEiLCJub25jZSI6IjhiMmIyYjNjLWZhYjctNGI1NC04ODlhLWQwYTM1MzgxY2E2OCIsImNvZGVfY2hhbGxlbmdlIjoicDI3Y1VjUFIyUHl0ZnZUMXc2NFY1Wkh6SFJsY3QzSTZ0M3NRVjI1SDAxWSIsInJlc3BvbnNlX21vZGUiOiJmcmFnbWVudCJ9fQ.tQh4GHyzn_6cj_l8DOquZ4HT41N35WBwwcauE2NEQ3A; Version=1; Path=/realms/master/; HttpOnly",
     "X-XSS-Protection": "1; mode=block",
     "Content-Language": "en",
