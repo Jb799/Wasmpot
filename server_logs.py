@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Configuration de la taille maximale du fichier de log en octets (ex. 5MB)
 MAX_LOG_SIZE = 5 * 1024 * 1024  # 5 MB
-LOG_DIR = '/home/taz/logs'  # Utilisez un répertoire pour stocker les logs
+LOG_DIR = '/home/firecracker/logs'  # Utilisez un répertoire pour stocker les logs
 LOG_FILENAME_TEMPLATE = 'wp2_log_{}.log'
 
 # Créez un gestionnaire de fichiers rotatif
@@ -25,7 +25,7 @@ def get_rotating_file_handler():
     # Si le fichier est vide, ajoutez l'en-tête
     if file_empty:
         with open(log_filename, 'a') as log_file:
-            log_file.write("Timestamp,ID,FLAG,Endpoint,Payload,IP,Country,Latitude,Longitude\n")
+            log_file.write("Timestamp,ID,FLAG,Method,Endpoint,Payload,IP,Country,Latitude_Longitude\n")
     
     return handler
 
@@ -35,7 +35,7 @@ def save_log():
     handler = get_rotating_file_handler()
 
     # Convertir le log en ligne CSV
-    csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},{log_line["path"]},"{log_line["query_string"]}","{log_line["client_ip"]}","{log_line["country"]}","{log_line["loc"]}"\n'
+    csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},"{log_line["method"]}",{log_line["path"]},"{log_line["query_string"]}","{log_line["client_ip"]}","{log_line["country"]}","{log_line["loc"]}"\n'
 
     print(csv_line)
 
@@ -49,4 +49,4 @@ def save_log():
 if __name__ == '__main__':
     if not os.path.exists(LOG_DIR):
         os.makedirs(LOG_DIR)
-    app.run(host='localhost', port=8068)
+    app.run(host='0.0.0.0', port=8068)
