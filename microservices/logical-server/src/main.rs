@@ -3,6 +3,7 @@ use std::env;
 use hyper::server::conn::Http;
 use hyper::service::service_fn;
 use hyper::{Body, Client, Method, Request, Response, Uri};
+use hyper::StatusCode;
 use hyper::body;
 use tokio::net::TcpListener;
 use serde::Serialize;
@@ -67,20 +68,21 @@ fn is_dst(datetime: DateTime<Utc>) -> bool {
 }
 
 async fn fetch_ip_info(ip: &str) -> (String, String) {
-    // let client = Client::new();
-    // let uri = format!("https://ipinfo.io/{}/json", ip).parse::<Uri>().expect("Failed to parse URI");
-    // match client.get(uri).await {
-    //     Ok(response) => {
-    //         let body = hyper::body::to_bytes(response.into_body()).await.expect("Failed to read response body");
-    //         let data: Value = serde_json::from_slice(&body).expect("Failed to parse JSON");
-    //         let loc = data.get("loc").and_then(|v| v.as_str()).unwrap_or("Unknown Location").to_string();
-    //         let country = data.get("country").and_then(|v| v.as_str()).unwrap_or("Unknown Country").to_string();
-    //         (loc, country)
-    //     },
-    //     Err(_) => ("API request failed".to_string(), "API request failed".to_string())
-    // }
-
-    ("0, 0".to_string(), "FR".to_string())
+    let client = Client::new();
+    let uri = format!("http://ipinfo.io/{}", ip).parse::<Uri>().expect("Failed to parse URI");
+    match client.get(uri).await {
+        Ok(response) => {
+            let body = hyper::body::to_bytes(response.into_body()).await.expect("Failed to read response body");
+            let data: Value = serde_json::from_slice(&body).expect("Failed to parse JSON");
+            let loc = data.get("loc").and_then(|v| v.as_str()).unwrap_or("Unknown Location").to_string();
+            let country = data.get("country").and_then(|v| v.as_str()).unwrap_or("Unknown Country").to_string();
+            (loc, country)
+        },
+        Err(e) => {
+            eprintln!("API request failed: {}", e);
+            ("API request failed".to_string(), "API request failed".to_string())
+        }
+    }
 }
 
 async fn display_logs(
@@ -133,19 +135,19 @@ async fn display_logs(
 
     println!("{},{},{},{},{},{},{},{},{}", paris_now, id, flag, method, path, query_string, client_ip, country, loc);
 
-    // let client = Client::new();
-    // let uri = format!("http://{}:{}/save_log", admin_name, admin_port).parse::<Uri>().unwrap();
-    // let json = serde_json::to_string(&log_entry).unwrap();
-    // let request = Request::builder()
-    //     .method(Method::POST)
-    //     .uri(uri)
-    //     .header("content-type", "application/json")
-    //     .body(Body::from(json))
-    //     .unwrap();
+    let client = Client::new();
+    let uri = format!("http://{}:{}/save_log", admin_name, admin_port).parse::<Uri>().unwrap();
+    let json = serde_json::to_string(&log_entry).unwrap();
+    let request = Request::builder()
+        .method(Method::POST)
+        .uri(uri)
+        .header("content-type", "application/json")
+        .body(Body::from(json))
+        .unwrap();
 
-    // tokio::spawn(async move {
-    //     let _ = client.request(request).await;
-    // });
+    tokio::spawn(async move {
+        let _ = client.request(request).await;
+    });
 }
 
 
@@ -170,50 +172,65 @@ async fn extract_body_params(req: &mut Request<Body>) -> HashMap<String, String>
     form_urlencoded::parse(&whole_body).into_owned().collect()
 }
 
-// async fn apply_response_modifications(
-//     mut response: Response<Body>,
-//     path: &str,
-//     method: MethodType,
-//     params: &HashMap<String, String>
-// ) -> Result<Response<Body>, hyper::Error> {
-//     let rules = get_response_rules();
+async fn apply_response_modifications(
+    mut response: Response<Body>,
+    path: &str,
+    method: MethodType,
+    params: &HashMap<String, String>
+) -> Result<Response<Body>, hyper::Error> {
+    let rules = get_response_rules();
     
-//     if let Some(rule) = rules.iter().find(|rule| rule.url == path && (rule.method == method || rule.method == MethodType::ANY)) {
-//         let mut body_bytes = hyper::body::to_bytes(response.body_mut()).await?;
-//         let mut body = String::from_utf8(body_bytes.to_vec()).unwrap_or_default();
-//         let mut params_copy = params.clone();
+    if let Some(rule) = rules.iter().find(|rule| rule.url == path && (rule.method == method || rule.method == MethodType::ANY)) {
+        let status_code = response.status();
+        let headers = response.headers().clone();
 
-//         for modification in &rule.modifications {
-//             match modification {
-//                 ResponseModification::Sanitize { param_name, regex } => {
-//                     if let Some(value) = params_copy.get(param_name.as_str()) {
-//                         let sanitized_value = regex.replace_all(value, "");
-//                         params_copy.insert(param_name.clone(), sanitized_value.to_string());
-//                     } else {
-//                         params_copy.insert(param_name.clone(), String::new());
-//                     }
-//                 },
-//                 ResponseModification::Replace { placeholder, param_name } => {
-//                     if let Some(value) = params_copy.get(param_name.as_str()) {
-//                         if body.contains(placeholder.as_str()) {
-//                             body = body.replace(placeholder.as_str(), value);
-//                         }
-//                     } else {
-//                         if body.contains(placeholder.as_str()) {
-//                             body = body.replace(placeholder.as_str(), "");
-//                         }
-//                     }
-//                 }
-//             }
-//         }
+        let mut body_bytes = hyper::body::to_bytes(response.body_mut()).await?;
+        let mut body = String::from_utf8(body_bytes.to_vec()).unwrap_or_default();
 
-//         *response.body_mut() = Body::from(body);
-//     }
+        let mut params_copy = params.clone();
 
-//     Ok(response)
-// }
+        for modification in &rule.modifications {
+            match modification {
+                ResponseModification::Sanitize { param_name, regex } => {
+                    if let Some(value) = params_copy.get(param_name.as_str()) {
+                        let sanitized_value = regex.replace_all(value, "");
+                        params_copy.insert(param_name.clone(), sanitized_value.to_string());
+                    } else {
+                        params_copy.insert(param_name.clone(), String::new());
+                    }
+                },
+                ResponseModification::Replace { placeholder, param_name } => {
+                    if let Some(value) = params_copy.get(param_name.as_str()) {
+                        if body.contains(placeholder.as_str()) {
+                            body = body.replace(placeholder.as_str(), value);
+                        }
+                    } else {
+                        if body.contains(placeholder.as_str()) {
+                            body = body.replace(placeholder.as_str(), "");
+                        }
+                    }
+                }
+            }
+        }
 
+        let mut response = Response::builder()
+        .status( status_code )
+        .body( Body::from(body) )
+        .unwrap();
 
+        for (name, value) in headers.iter() {
+            if name == "content-length" || name == "date"{
+                continue;
+            }
+
+            response.headers_mut().insert(name, value.clone());
+        }
+
+        return Ok( response );
+    }
+
+    Ok( response )
+}
 
 async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, admin_name: String, admin_port: u16) -> Result<Response<Body>, hyper::Error> {
     let method = if req.method() == &Method::GET { MethodType::GET } else { MethodType::POST };
@@ -225,8 +242,6 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
     let mut filtered: bool = false;
 
     if !is_static_resource(req.uri()) {
-        println!("Uri: {}", req.uri());
-
         if method == MethodType::POST {
             params = extract_body_params(&mut req).await;
         } else {
@@ -236,7 +251,7 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
             }).collect::<HashMap<_, _>>();
         }
 
-        if let Some(rule) = rules.iter().find(|rule| rule.url_pattern.is_match(&path) && rule.method == method) {
+        if let Some(rule) = rules.iter().find(|rule| rule.url_pattern.is_match(&path) && ( rule.method == MethodType::ANY || rule.method == method) ) {
             if let Some(redirect_url) = &rule.redirect {
                 display_logs(
                     None,
@@ -286,57 +301,10 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
         return Ok(response);
     }
 
-    let mut response = fetch_resource(&path, web_res_port, web_res_name).await?;
-    // let final_response = apply_response_modifications(response, &path, method, &mut params).await;
+    let response = fetch_resource(&path, web_res_port, web_res_name).await?;
+    let final_response = apply_response_modifications(response, &path, method, &mut params).await?;
 
-    let rep_rules = get_response_rules();
-    let mut new_body = String::new();
-    
-    if let Some(rule) = rep_rules.iter().find(|rule| rule.url == path && (rule.method == method || rule.method == MethodType::ANY)) {
-        let mut body_bytes = hyper::body::to_bytes(response.body_mut()).await?;
-        let mut body = String::from_utf8(body_bytes.to_vec()).unwrap_or_default();
-        let mut params_copy = params.clone();
-
-        for modification in &rule.modifications {
-            match modification {
-                ResponseModification::Sanitize { param_name, regex } => {
-                    if let Some(value) = params_copy.get(param_name.as_str()) {
-                        let sanitized_value = regex.replace_all(value, "");
-                        params_copy.insert(param_name.clone(), sanitized_value.to_string());
-                    } else {
-                        params_copy.insert(param_name.clone(), String::new());
-                    }
-                },
-                ResponseModification::Replace { placeholder, param_name } => {
-                    if let Some(value) = params_copy.get(param_name.as_str()) {
-                        if body.contains(placeholder.as_str()) {
-                            new_body = body.replace(placeholder.as_str(), value);
-                        }
-                    } else {
-                        if body.contains(placeholder.as_str()) {
-                            new_body = body.replace(placeholder.as_str(), "");
-                        }
-                    }
-                }
-            }
-            println!("      >> RULES !!!");
-        }
-
-        // *response.body_mut() = Body::from(body);
-    }
-
-    let mut new_response = Response::builder()
-    .status(response.status())
-    .version(response.version())
-    .body(Body::from(new_body))
-    .expect("Failed to build response");
-
-    for (key, value) in response.headers().iter() {
-        new_response.headers_mut().insert(key, value.clone());
-    }
-
-
-    Ok(new_response)
+    Ok( final_response )
 }
 
 #[tokio::main(flavor = "current_thread")]
