@@ -1,0 +1,45 @@
+# Stage 1: Build the binary
+FROM rust:latest as builder
+
+# Create a new empty shell project and install necessary tools
+RUN USER=root cargo new --bin wasmpot && \
+    apt-get update && apt-get install -y musl-tools && \
+    rustup target add x86_64-unknown-linux-musl
+
+WORKDIR /wasmpot
+
+# Copy our manifests
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+
+# Build only the dependencies to cache them
+RUN cargo build --target x86_64-unknown-linux-musl --release
+
+# Remove placeholder source files
+RUN rm src/*.rs
+
+# Copy actual source code
+COPY ./src ./src
+
+# Build for release.
+RUN cargo build --target x86_64-unknown-linux-musl --release && \
+    rm ./target/x86_64-unknown-linux-musl/release/deps/wasmpot2_src* && \
+    cargo install --path .
+
+# Stage 2: Setup the runtime environment
+FROM ubuntu:latest
+
+# Copy the binary from the builder stage & src contents
+COPY --from=builder /usr/local/cargo/bin/wasmpot2_src /usr/local/bin/wasmpot2_src
+COPY ./src/sources ./src/sources
+
+# Environment variables
+ENV ACTIX_PORT 8888
+ENV WASI_PORT 0
+ENV WASI_ADDR "localhost"
+
+# Expose port based on environment variable
+EXPOSE $ACTIX_PORT
+
+# Use ENTRYPOINT to pass environment variables as arguments
+ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/wasmpot2_src $ACTIX_PORT $WASI_PORT $WASI_ADDR"]
