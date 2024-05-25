@@ -1,0 +1,30 @@
+{
+  "url": "/explore/projects/topics",
+  "content_file": "html/topics.html",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 302,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 17:08:28 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Cache-Control": "no-cache",
+    "Content-Security-Policy": "",
+    "Location": "http://{ADDR}:{PORT}/users/sign_in",
+    "Permissions-Policy": "interest-cohort=()",
+    "Set-Cookie": "_gitlab_session=5d3851b95ecefe7f8c802b3d8a34acc7; path=/; expires=Sat, 25 May 2024 19:08:28 GMT; HttpOnly",
+    "X-Content-Type-Options": "nosniff",
+    "X-Download-Options": "noopen",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Gitlab-Meta": "{\"correlation_id\":\"01HYRBKAD50ZEMAPPGQ9RPDBHX\",\"version\":\"1\"}",
+    "X-Permitted-Cross-Domain-Policies": "none",
+    "X-Request-Id": "01HYRBKAD50ZEMAPPGQ9RPDBHX",
+    "X-Runtime": "0.038575",
+    "X-Ua-Compatible": "IE=edge",
+    "X-Xss-Protection": "1; mode=block",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  }
+}

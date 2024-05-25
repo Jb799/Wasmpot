@@ -1,0 +1,29 @@
+{
+  "url": "/help/user/index.md",
+  "content_file": "html/help/user/index.md",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 302,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:22 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Cache-Control": "no-cache",
+    "Content-Security-Policy": "",
+    "Location": "https://docs.gitlab.com/16.7/ee/user/index.html",
+    "Permissions-Policy": "interest-cohort=()",
+    "X-Content-Type-Options": "nosniff",
+    "X-Download-Options": "noopen",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Gitlab-Meta": "{\"correlation_id\":\"01HYR7REA75M2JY1KN6J23A0H1\",\"version\":\"1\"}",
+    "X-Permitted-Cross-Domain-Policies": "none",
+    "X-Request-Id": "01HYR7REA75M2JY1KN6J23A0H1",
+    "X-Runtime": "0.011937",
+    "X-Ua-Compatible": "IE=edge",
+    "X-Xss-Protection": "1; mode=block",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  }
+}

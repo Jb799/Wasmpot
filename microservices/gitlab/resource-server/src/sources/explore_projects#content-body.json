@@ -1,0 +1,32 @@
+{
+  "url": "/explore/projects#content-body",
+  "content_file": "html/projects#content-body.html",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:14 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Vary": "Accept-Encoding, Accept",
+    "Cache-Control": "max-age=0, private, must-revalidate",
+    "Content-Security-Policy": "",
+    "Etag": "W/\"1f0d7fdb54d77529c31ef61ca7d21f1e\"",
+    "Permissions-Policy": "interest-cohort=()",
+    "Set-Cookie": "_gitlab_session=459e399bf6abe4bccc3d97d658b93e3b; path=/; expires=Sat, 25 May 2024 18:01:14 GMT; HttpOnly",
+    "X-Content-Type-Options": "nosniff",
+    "X-Download-Options": "noopen",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Gitlab-Meta": "{\"correlation_id\":\"01HYR7R6H30QRK62VG3SWM6GK4\",\"version\":\"1\"}",
+    "X-Permitted-Cross-Domain-Policies": "none",
+    "X-Request-Id": "01HYR7R6H30QRK62VG3SWM6GK4",
+    "X-Runtime": "0.085600",
+    "X-Ua-Compatible": "IE=edge",
+    "X-Xss-Protection": "1; mode=block",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Content-Encoding": "gzip"
+  }
+}

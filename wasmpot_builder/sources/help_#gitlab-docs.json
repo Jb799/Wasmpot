@@ -1,0 +1,32 @@
+{
+  "url": "/help/#gitlab-docs",
+  "content_file": "html/#gitlab-docs.html",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:22 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Vary": "Accept-Encoding, Accept",
+    "Cache-Control": "max-age=0, private, must-revalidate",
+    "Content-Security-Policy": "",
+    "Etag": "W/\"18cab3a547b2b7af2b597ed8d86f08ad\"",
+    "Permissions-Policy": "interest-cohort=()",
+    "Set-Cookie": "_gitlab_session=da7aa3a8eb58a167a228d25360845ec9; path=/; expires=Sat, 25 May 2024 18:01:22 GMT; HttpOnly",
+    "X-Content-Type-Options": "nosniff",
+    "X-Download-Options": "noopen",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Gitlab-Meta": "{\"correlation_id\":\"01HYR7REHRYKQKN1EKCN9FTP6A\",\"version\":\"1\"}",
+    "X-Permitted-Cross-Domain-Policies": "none",
+    "X-Request-Id": "01HYR7REHRYKQKN1EKCN9FTP6A",
+    "X-Runtime": "0.039110",
+    "X-Ua-Compatible": "IE=edge",
+    "X-Xss-Protection": "1; mode=block",
+    "Strict-Transport-Security": "max-age=63072000",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Content-Encoding": "gzip"
+  }
+}

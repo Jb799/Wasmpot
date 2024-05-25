@@ -1,0 +1,19 @@
+{
+  "url": "/assets/gitlab-sans/GitLabSans-1e0a5107ea3bbd4be93e8ad2c503467e43166cd37e4293570b490e0812ede98b.woff2",
+  "content_file": "html/assets/gitlab-sans/GitLabSans-1e0a5107ea3bbd4be93e8ad2c503467e43166cd37e4293570b490e0812ede98b.woff2",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:13 GMT",
+    "Content-Type": "font/woff2",
+    "Content-Length": "324504",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Expires": "Sun, 25 May 2025 18:01:13 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:55 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

@@ -8,20 +8,26 @@ import re
 import gzip
 import json
 from urllib.parse import urljoin, urlparse
+from rich import print
 
 saved_contents = 0
 saved_endpoints = []
 web_port = ""
+web_address = ""
+projectName = ""
+wp_folder = ""
+
+local_urls = ['localhost', '127.0.0.1']
 
 def save_content(wp_folder, url, content, extension):
     if not content:
         return
-    
+
     if web_port:
-        pattern = re.compile(r'(localhost|127\.0\.0\.1):' + re.escape(str(web_port)))
+        pattern = re.compile(r'(' + '|'.join(map(re.escape, local_urls)) + ')(:' + re.escape(str(web_port)) + ')?')
         content = pattern.sub('{ADDR}:{PORT}', content.decode('iso-8859-1')).encode('iso-8859-1')
 
-    url = url.split('?')[0]
+    url = url.split('?')[0].split(';;')[0]
     relative_path = 'index' if not url else url
 
     if url[-1] == '/':
@@ -56,8 +62,17 @@ def save_endpoint(wp_folder, url, response, type):
 
     if os.path.exists(folder_path):
         return False
+    
+    url = url.split(';;')[0]
 
     saved_endpoints.append(url)
+
+    qparams = url.split('?')
+    if len(qparams) > 1:
+        url = qparams[0]
+        qparams = qparams[1]
+    else:
+        qparams = ""
 
     # Sauvegarde les informations dans un fichier JSON
     if url == '/index' or url == 'index':
@@ -77,22 +92,17 @@ def save_endpoint(wp_folder, url, response, type):
         elif content_file_name[-5:] != '.html':
             content_file_name = url.split('?')[0]
 
-        qparams = url.split('?')
-        if len(qparams) > 1:
-            url = qparams[0]
-            qparams = qparams[1]
-        else:
-            qparams = ""
-
         json_url = url.replace("/", "_")
 
         json_path = os.path.join(wp_folder, f'{json_url}.json')
-    
+
     # Adapt Port and Address
     if len(web_port) != 0:
         for key, value in response.headers.items():
-            new_value = value.replace('localhost', '{ADDR}').replace('127.0.0.1', '{ADDR}').replace(str(web_port), '{PORT}')
-            response.headers[key] = new_value
+            for uri in local_urls:
+                value = value.replace(uri, '{ADDR}:{PORT}')
+            value = value.replace(f':{str(web_port)}', '')
+            response.headers[key] = value
 
     with open(json_path, 'w') as json_file:
         if(url == "/"):
@@ -127,7 +137,7 @@ def extract_links_from_css(wp_folder, url, css_content):
         css_link = css_link.strip(' \'"')
         if not css_link.startswith('data:'):
             absolute_url = urljoin(url, css_link)
-            if urlparse(absolute_url).hostname in ['localhost', '127.0.0.1']:
+            if urlparse(absolute_url).hostname in local_urls:
                 explore_url(wp_folder, absolute_url)
 
 def extract_urls_from_json(wp_folder, url, json_content):
@@ -135,7 +145,6 @@ def extract_urls_from_json(wp_folder, url, json_content):
     try:
         data = json.loads(json_content)
     except json.JSONDecodeError:
-        print("Invalid JSON")
         return
 
     # Define a recursive function to walk through the JSON and extract URLs
@@ -148,14 +157,18 @@ def extract_urls_from_json(wp_folder, url, json_content):
                 extract_urls(item)
         elif isinstance(obj, str) and obj.startswith('http'):
             absolute_url = urljoin(url, obj)
-            if urlparse(absolute_url).hostname in ['localhost', '127.0.0.1']:
+            if urlparse(absolute_url).hostname in local_urls:
                 explore_url(wp_folder, absolute_url)
                 
     extract_urls(data)
 
 def explore_url(wp_folder, url):
-    if urlparse(url).hostname not in ['localhost', '127.0.0.1']:
+    if urlparse(url).hostname not in local_urls:
         return
+    
+    loop = True
+    if len(url) > 2 and url[-2:] == ";;":
+        loop = False
     
     pattern = re.compile(r'https?://[^/]+/?')
     saved_url = pattern.sub('', url)
@@ -166,14 +179,17 @@ def explore_url(wp_folder, url):
     if saved_url in saved_endpoints:
         return
     
+    menu()
+    print(f"[bold dark_orange3 underline] ** Exploring {url}... **[/bold dark_orange3 underline]")
+    
     # Faire une requête GET
     response = requests.get(url, allow_redirects=False)  # Ne pas suivre automatiquement les redirections
 
     # Gérer les redirections
     if response.status_code >= 300 and response.status_code < 400 and 'Location' in response.headers:
         redirect_url = urljoin(url, response.headers['Location'])
-
-        explore_url(wp_folder, redirect_url)
+        if loop:
+            explore_url(wp_folder, redirect_url)
 
     # Sauvegarder la réponse
     if not save_endpoint(wp_folder, saved_url, response, 'GET'):
@@ -196,15 +212,18 @@ def explore_url(wp_folder, url):
 
         for link in links:
             absolute_url = urljoin(url, link['href'])
-            explore_url(wp_folder, absolute_url)
+            if loop:
+                explore_url(wp_folder, absolute_url)
 
         for script in scripts:
             absolute_url = urljoin(url, script['src'])
-            explore_url(wp_folder, absolute_url)
+            if loop:
+                explore_url(wp_folder, absolute_url)
 
         for img in images:
             absolute_url = urljoin(url, img['src'])
-            explore_url(wp_folder, absolute_url)
+            if loop:
+                explore_url(wp_folder, absolute_url)
     
     # Si le contenu est un fichier JavaScript ou CSS, analyser les liens à l'intérieur
     elif response.headers.get('Content-Type') is not None and response.headers.get('Content-Type').startswith(('text/javascript', 'text/css', 'application/javascript', 'application/x-javascript', 'application/json')):
@@ -221,72 +240,100 @@ def explore_url(wp_folder, url):
 
 
 def create_wp(wp_name):
+    global wp_folder
+
     wp_folder = wp_name.replace(" ", "_").replace(".", "_").replace("/", "_").replace("\\", "_")
 
     if not os.path.exists(wp_folder):
         os.makedirs(wp_folder)
-        print(f"Project [{wp_name}] created successfully.")
     else:
-        print(f"Project [{wp_name}] already exists, add contents...")
+        print(f"[bold dark_orange3 underline]Project [{wp_name}] already exists, add contents...[/bold dark_orange3 underline]")
 
     return wp_folder
 
-def addEndpoint(honeypot_name, endpoint):
-    global web_port
-
-    wp_folder = honeypot_name.replace(" ", "_").replace(".", "_").replace("/", "_").replace("\\", "_")
-
-    if not os.path.exists(wp_folder):
-        print(f"Project [{wp_name}] doesn't exist.")
-        return -1
+def menu():
+    os.system('cls' if os.name == 'nt' else 'clear')
     
-    if not "http://" in endpoint[:7]:
-        endpoint = "http://" + endpoint
-
-    web_port = (endpoint.split(":")[2])[:4]
-
-    explore_url(wp_folder, endpoint)
-
-    print(f"\n\n ## {saved_contents} contents saved and {len(saved_endpoints)} endpoints saved. ##\n\n")
+    print("[bold dark_orange3]              \     /[/bold dark_orange3]")
+    print("[bold dark_orange3]          \    o ^ o    /[/bold dark_orange3]")
+    print("[bold dark_orange3]            \ (     ) /[/bold dark_orange3]")
+    print("[bold dark_orange3] ____________[/bold dark_orange3][cyan](%%%%%%%)[/cyan][bold dark_orange3]____________[/bold dark_orange3]")
+    print("[bold dark_orange3](     /   /  )[/bold dark_orange3][cyan]%%%%%%%[/cyan][bold dark_orange3](  \   \     )[/bold dark_orange3]")
+    print("[bold dark_orange3](___/___/__/           \__\___\___)[/bold dark_orange3]")
+    print("[bold dark_orange3]   (     /  /[/bold dark_orange3][cyan](%%%%%%%)[/cyan][bold dark_orange3]\  \     )[/bold dark_orange3]")
+    print("[bold dark_orange3]    (__/___/ [/bold dark_orange3][cyan](%%%%%%%)[/cyan][bold dark_orange3] \___\__)[/bold dark_orange3]")
+    print("[bold dark_orange3]            /[/bold dark_orange3][cyan](       )[/cyan][bold dark_orange3]\\ [/bold dark_orange3]")
+    print("[bold dark_orange3]          /   [/bold dark_orange3][cyan](%%%%%)[/cyan][bold dark_orange3]   \\ [/bold dark_orange3]")
+    print("[bold dark_orange3]               [/bold dark_orange3][cyan](%%%)[/cyan]")
+    print("[bold dark_orange3]                 ![/bold dark_orange3]")
     
-    return 0
+    print("[cyan]-------------------------------------[/cyan]")
+    print("[cyan]|[/cyan]        [bold dark_orange3 underline]WP2 HoneyPot Builder[/bold dark_orange3 underline]       [cyan]|[/cyan]")
+    print("[cyan]-------------------------------------[/cyan]")
 
-def main():
-    global web_port
+    if projectName != "":
+        print(f"[cyan]|   ## Project: {projectName} ##[/cyan]")
 
-    args = sys.argv[1:]
-    wp_name = ""
-    wp_address = ""
+    if web_address != "":
+        print(f"[cyan]|   ## LastEndpoint: {web_address} ##[/cyan]")
 
-    if len(args) < 2 or not isinstance(args[0], str) or not isinstance(args[1], str):
-        print("Usage: wp_builder.py <honeypot name> <local address>")
-        print("Usage2: wp_builder.py <honeypot name> --add <local server endpoint>")
-        return -1
-    if len(args) < 3 and args[1] == "--add":
-        print("Usage2: wp_builder.py <honeypot name> --add <local server endpoint>")
-        return -1
-    
-    if args[1] == "--add":
-        return addEndpoint(args[0], args[2])
+    print(f"[cyan]|   ## [bold dark_orange3 underline]{saved_contents}[/bold dark_orange3 underline] contents & [bold dark_orange3 underline]{len(saved_endpoints)}[/bold dark_orange3 underline] endpoints ##[/cyan]")
 
-    wp_name = args[0]
-    wp_address = args[1]
-    web_port = (wp_address.split(":")[-1])
+    print("\n")
 
-    if not "http://" in wp_address[:7]:
-        wp_address = "http://" + wp_address
 
-    wp_folder = create_wp(wp_name)
+def selectName():
+    global projectName
+
+    menu()
+    print("[cyan]Enter your project name:[/cyan]")
+    projectName = input("  >> ")
+
+    wp_folder = create_wp(projectName)
 
     if wp_folder == -1:
         return -1
+
+    return 0
+
+
+def selectEndpoint():
+    global web_address
+    global web_port
+    global wp_folder
+
+    menu()
+    print("[cyan]Enter a local server endpoint or (quit):[/cyan]")
+    web_address = input("  >> ")
+
+    if web_address == "quit":
+        return 0
+
+    if not "http://" in web_address[:7]:
+        web_address = "http://" + web_address
     
-    print(f"Building [{wp_name}] on {wp_address}...")
-    explore_url(wp_folder, wp_address)
+    addr = web_address.replace('http://', '').replace('https://', '').split(':')[0].split('/')[0]
+    if addr not in local_urls:
+        local_urls.append(addr)
 
-    print(f"Project [{wp_name}] built successfully.")
-    print(f"\n\n ## {saved_contents} contents saved and {len(saved_endpoints)} endpoints saved. ##\n\n")
+    web_port = web_address.split(":")
+    
+    if len(web_port) > 2:
+        web_port = (web_address.split(":")[2]).split("/")[0]
+    else:
+        if 'https' in web_address:
+            web_port = "443"
+        else:
+            web_port = "80"
 
+    explore_url(wp_folder, web_address)
+
+    selectEndpoint()
+
+
+def main():
+    if selectName() == 0:
+        selectEndpoint()
     return 0
 
 if __name__ == "__main__":

@@ -1,0 +1,19 @@
+{
+  "url": "/assets/swipemode_sprites-522fecbb380f3edfa9b09006e88a51fbcb5c26d95dba87d2e09a363a863cd4e4.gif",
+  "content_file": "html/assets/swipemode_sprites-522fecbb380f3edfa9b09006e88a51fbcb5c26d95dba87d2e09a363a863cd4e4.gif",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:13 GMT",
+    "Content-Type": "image/gif",
+    "Content-Length": "505",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Expires": "Sun, 25 May 2025 18:01:13 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:56 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

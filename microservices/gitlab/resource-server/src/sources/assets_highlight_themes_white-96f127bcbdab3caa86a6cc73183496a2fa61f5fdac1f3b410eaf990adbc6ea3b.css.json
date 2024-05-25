@@ -1,0 +1,20 @@
+{
+  "url": "/assets/highlight/themes/white-96f127bcbdab3caa86a6cc73183496a2fa61f5fdac1f3b410eaf990adbc6ea3b.css",
+  "content_file": "html/assets/highlight/themes/white-96f127bcbdab3caa86a6cc73183496a2fa61f5fdac1f3b410eaf990adbc6ea3b.css",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:13 GMT",
+    "Content-Type": "text/css; charset=utf-8",
+    "Content-Length": "1966",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "Expires": "Sun, 25 May 2025 18:01:13 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:55 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

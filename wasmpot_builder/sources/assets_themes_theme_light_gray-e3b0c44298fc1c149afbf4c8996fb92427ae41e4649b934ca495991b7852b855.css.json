@@ -1,0 +1,19 @@
+{
+  "url": "/assets/themes/theme_light_gray-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:13 GMT",
+    "Content-Type": "text/css; charset=utf-8",
+    "Content-Length": "20",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "Expires": "Sun, 25 May 2025 18:01:13 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:56 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

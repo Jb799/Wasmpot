@@ -1,0 +1,15 @@
+{
+  "url": "/assets/webpack/vendors-global_search_modal.2031e5c3.chunk.js",
+  "content_file": "html/assets/webpack/vendors-global_search_modal.2031e5c3.chunk.js",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 404,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 17:07:01 GMT",
+    "Content-Type": "text/plain; charset=utf-8",
+    "Content-Length": "19",
+    "Connection": "keep-alive",
+    "X-Content-Type-Options": "nosniff"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "url": "/assets/illustrations/image_comment_light_cursor@2x-6eb274d388a8bbdbdaeee008afc79ef9dab89fb7d5409cd08739ae08059a3ce4.svg",
+  "content_file": "html/assets/illustrations/image_comment_light_cursor@2x-6eb274d388a8bbdbdaeee008afc79ef9dab89fb7d5409cd08739ae08059a3ce4.svg",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:13 GMT",
+    "Content-Type": "image/svg+xml",
+    "Content-Length": "346",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "Expires": "Sun, 25 May 2025 18:01:13 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:55 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

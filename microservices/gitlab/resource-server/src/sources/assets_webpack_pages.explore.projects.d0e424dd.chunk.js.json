@@ -1,0 +1,20 @@
+{
+  "url": "/assets/webpack/pages.explore.projects.d0e424dd.chunk.js",
+  "content_file": "html/assets/webpack/pages.explore.projects.d0e424dd.chunk.js",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 16:01:16 GMT",
+    "Content-Type": "text/javascript; charset=utf-8",
+    "Content-Length": "948",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "Expires": "Sun, 25 May 2025 18:01:16 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:57 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

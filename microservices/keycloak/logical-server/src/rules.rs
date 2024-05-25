@@ -120,7 +120,7 @@ pub fn get_rules() -> Vec<Rule> {
             id: None,
         },
         Rule {
-            url_pattern: Regex::new(r"(/etc/|/var/|/bin/|/home/|/usr/|/root/|/sbin/|)").unwrap(),
+            url_pattern: Regex::new(r"(/etc/|/var/|/bin/|/home/|/usr/|/root/|/sbin/)").unwrap(),
             method: MethodType::ANY,
             query_params: vec![],
             data_params: vec![],
