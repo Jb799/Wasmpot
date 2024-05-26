@@ -1,7 +1,7 @@
 {
   "name": "GitLab",
   "short_name": "GitLab",
-  "description": "La plateforme DevOps complète. Une application unique avec des possibilités infinies. Les entreprises s&#39;appuient sur la gestion du code source, la CI/CD, la sécurité et d&#39;autres fonctionnalités de GitLab pour livrer des logiciels rapidement.",
+  "description": "The complete DevOps platform. One application with endless possibilities. Organizations rely on GitLab’s source code management, CI/CD, security, and more to deliver software rapidly.",
   "start_url": "/",
   "scope": "/",
   "display": "browser",

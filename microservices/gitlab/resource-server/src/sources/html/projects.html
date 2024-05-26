@@ -48,14 +48,14 @@ window.gon={};
 <meta content="http://{ADDR}:{PORT}/assets/twitter_card-570ddb06edf56a2312253c5872489847a0f385112ddbcd71ccfa1570febab5d2.jpg" property="og:image">
 <meta content="64" property="og:image:width">
 <meta content="64" property="og:image:height">
-<meta content="http://{ADDR}:{PORT}/explore/projects?archived=only&amp;sort=created_asc" property="og:url">
+<meta content="http://{ADDR}:{PORT}/explore/projects" property="og:url">
 <meta content="summary" property="twitter:card">
 <meta content="Explore projects · GitLab" property="twitter:title">
 <meta content="GitLab Community Edition" property="twitter:description">
 <meta content="http://{ADDR}:{PORT}/assets/twitter_card-570ddb06edf56a2312253c5872489847a0f385112ddbcd71ccfa1570febab5d2.jpg" property="twitter:image">
 
 <meta name="csrf-param" content="authenticity_token" />
-<meta name="csrf-token" content="9j4cfRXk3JwyzLJGe0LT9h8jUQZAlHwiqaWf8-dKoWKihJlPOjvS7Yy-u36JalTxa-miyYv66KITsSsJ4OznoA" />
+<meta name="csrf-token" content="174gEriheRjfmS1u_V7sXrA5H2isZ9F0TlMMev414ZE3Oy1d5j0PHTIj0dhukfVMSHI0yh3AzAlEdAF31ENUdQ" />
 <meta name="csp-nonce" />
 <meta name="action-cable-url" content="/-/cable" />
 <link href="/-/manifest.json" rel="manifest">
@@ -154,11 +154,11 @@ gl.client = {"isGeneric":true,"isOther":true};
 <li class="gl-breadcrumb-item"><a href="/explore">Explore</a></li>
 
 <li class="gl-breadcrumb-item" data-testid="breadcrumb-current-link">
-<a href="/explore/projects?archived=only&amp;sort=created_asc">Projects</a>
+<a href="/explore/projects">Projects</a>
 </li>
 </ul>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Projects","item":"http://{ADDR}:{PORT}/explore/projects?archived=only\u0026sort=created_asc"}]}
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Projects","item":"http://{ADDR}:{PORT}/explore/projects"}]}
 
 </script>
 </nav>
@@ -189,54 +189,53 @@ gl.client = {"isGeneric":true,"isOther":true};
 <li class="nav-item"><a class="nav-link gl-tab-nav-item" href="/explore/projects/starred">Most starred</a></li>
 <li class="nav-item"><a class="nav-link gl-tab-nav-item" href="/explore/projects/trending">Trending</a></li>
 </ul><div class="nav-controls">
-<form class="project-filter-form gl-display-flex! gl-flex-wrap gl-w-full gl-gap-3 " data-testid="project-filter-form-container" id="project-filter-form" action="/explore/projects?archived=only&amp;sort=created_asc" accept-charset="UTF-8" method="get"><input type="search" name="name" id="project-filter-form-field" placeholder="Filter by name" class="project-filter-form-field form-control input-short js-projects-list-filter gl-m-0!" spellcheck="false" />
-<input type="hidden" name="sort" id="sort" value="created_asc" autocomplete="off" />
-<input type="hidden" name="archived" id="archived" value="only" autocomplete="off" />
+<form class="project-filter-form gl-display-flex! gl-flex-wrap gl-w-full gl-gap-3 " data-testid="project-filter-form-container" id="project-filter-form" action="/explore/projects?sort=latest_activity_desc" accept-charset="UTF-8" method="get"><input type="search" name="name" id="project-filter-form-field" placeholder="Filter by name" class="project-filter-form-field form-control input-short js-projects-list-filter gl-m-0!" spellcheck="false" />
+<input type="hidden" name="sort" id="sort" value="latest_activity_desc" autocomplete="off" />
 <div class="dropdown gl-m-0!">
 <button class="dropdown-menu-toggle " type="button" data-toggle="dropdown" data-testid="project-language-dropdown"><span class="dropdown-toggle-text ">Language</span><svg class="s16 dropdown-menu-toggle-icon" data-testid="chevron-down-icon"><use href="/assets/icons-33d285b77c0f9173f577e26a550fb6463b9913e368ebfcdbb54022aff27051db.svg#chevron-down"></use></svg></button>
 <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable">
 <li>
-<a href="/explore/projects?archived=only&amp;sort=created_asc">Any</a>
+<a href="/explore/projects?sort=latest_activity_desc">Any</a>
 </li>
 </ul>
 </div>
 <input type="submit" name="commit" class="gl-display-none!" data-disable-with="" />
 <div class="dropdown js-project-filter-dropdown-wrap gl-display-inline gl-m-0!">
-<button class="dropdown-menu-toggle " id="sort-projects-dropdown" type="button" data-toggle="dropdown" data-display="static"><span class="dropdown-toggle-text ">Oldest created</span><svg class="s16 dropdown-menu-toggle-icon" data-testid="chevron-down-icon"><use href="/assets/icons-33d285b77c0f9173f577e26a550fb6463b9913e368ebfcdbb54022aff27051db.svg#chevron-down"></use></svg></button>
+<button class="dropdown-menu-toggle " id="sort-projects-dropdown" type="button" data-toggle="dropdown" data-display="static"><span class="dropdown-toggle-text ">Updated date</span><svg class="s16 dropdown-menu-toggle-icon" data-testid="chevron-down-icon"><use href="/assets/icons-33d285b77c0f9173f577e26a550fb6463b9913e368ebfcdbb54022aff27051db.svg#chevron-down"></use></svg></button>
 <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable">
 <li class="dropdown-header">
 Sort by
 </li>
 <li>
-<a href="/explore/projects?archived=only&amp;sort=latest_activity_desc">Updated date
+<a class="is-active" href="/explore/projects?sort=latest_activity_desc">Updated date
 </a></li>
 <li>
-<a href="/explore/projects?archived=only&amp;sort=created_desc">Last created
+<a href="/explore/projects?sort=created_desc">Last created
 </a></li>
 <li>
-<a href="/explore/projects?archived=only&amp;sort=name_asc">Name
+<a href="/explore/projects?sort=name_asc">Name
 </a></li>
 <li>
-<a href="/explore/projects?archived=only&amp;sort=name_desc">Name, descending
+<a href="/explore/projects?sort=name_desc">Name, descending
 </a></li>
 <li>
-<a href="/explore/projects?archived=only&amp;sort=stars_desc">Most stars
+<a href="/explore/projects?sort=stars_desc">Most stars
 </a></li>
 <li>
-<a href="/explore/projects?archived=only&amp;sort=latest_activity_asc">Oldest updated
+<a href="/explore/projects?sort=latest_activity_asc">Oldest updated
 </a></li>
 <li>
-<a class="is-active" href="/explore/projects?archived=only&amp;sort=created_asc">Oldest created
+<a href="/explore/projects?sort=created_asc">Oldest created
 </a></li>
 <li class="divider"></li>
 <li>
-<a href="/explore/projects?sort=created_asc">Hide archived projects
+<a class="is-active" href="/explore/projects?sort=latest_activity_desc">Hide archived projects
 </a></li>
 <li>
-<a href="/explore/projects?archived=true&amp;sort=created_asc">Show archived projects
+<a href="/explore/projects?archived=true&amp;sort=latest_activity_desc">Show archived projects
 </a></li>
 <li>
-<a class="is-active" href="/explore/projects?archived=only&amp;sort=created_asc">Show archived projects only
+<a href="/explore/projects?archived=only&amp;sort=latest_activity_desc">Show archived projects only
 </a></li>
 </ul>
 </div>

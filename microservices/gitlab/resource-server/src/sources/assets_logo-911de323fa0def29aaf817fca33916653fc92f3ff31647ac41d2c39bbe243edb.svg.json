@@ -1,0 +1,20 @@
+{
+  "url": "/assets/logo-911de323fa0def29aaf817fca33916653fc92f3ff31647ac41d2c39bbe243edb.svg",
+  "content_file": "html/assets/logo-911de323fa0def29aaf817fca33916653fc92f3ff31647ac41d2c39bbe243edb.svg",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 23:40:08 GMT",
+    "Content-Type": "image/svg+xml",
+    "Content-Length": "480",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "Expires": "Mon, 26 May 2025 01:40:08 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:55 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff",
+    "Accept-Ranges": "bytes"
+  }
+}

@@ -1,3 +1,5 @@
 - Ajouter système d'envoie de request post pour les formulaires et modifications 
     de querys parameters
 - Ajouter système de cookies !!
+
+Detecter les formulaire et les remplire avec des {USERNAME_WP2} {PASSWORD_WP2}

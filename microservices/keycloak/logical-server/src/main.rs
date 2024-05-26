@@ -53,7 +53,7 @@ fn is_static_resource(uri: &Uri) -> bool {
         }
 
         match ext.last().unwrap_or("") {
-            "html" | "php" | "js" => false,
+            "html" | "php" => false,
             _ => true,
         }
     } else {
@@ -252,9 +252,9 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
         }
 
         if let Some(rule) = rules.iter().find(|rule| rule.url_pattern.is_match(&path) && ( rule.method == MethodType::ANY || rule.method == method) ) {
-            if let Some(redirect_url) = &rule.redirect {
+            if rule.query_params.is_empty() {
                 display_logs(
-                    None,
+                    Some(&params),
                     None,
                     &path,
                     admin_name.clone(),
@@ -263,31 +263,38 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
                     rule.flag.unwrap_or(0),
                     rule.id.unwrap_or(0)
                 ).await;
-                let response = fetch_resource(redirect_url, web_res_port, web_res_name).await?;
-                return Ok(response);
-            }
 
-            for param in &rule.query_params {
-                match params.get(&param.name) {
-                    Some(value) if is_value_valid(&param.value, value) => continue,
-                    Some(_) if !param.required => continue,
-                    None if param.required => {
-                        display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, &req, 0, 0).await;
-                        if let Some(redirect_url) = &param.redirect {
-                            let response = fetch_resource(&redirect_url, web_res_port, web_res_name).await?;
-                            return Ok(response);
+                if let Some(redirect_url) = &rule.redirect {
+                    let response = fetch_resource(redirect_url, web_res_port, web_res_name).await?;
+                    return Ok(response);
+                }else{
+                    let response = fetch_resource(&path, web_res_port, web_res_name).await?;
+                    let final_response = apply_response_modifications(response, &path, method, &mut params).await?;
+                    return Ok( final_response );
+                }
+            }else{
+                for param in &rule.query_params {
+                    match params.get(&param.name) {
+                        Some(value) if is_value_valid(&param.value, value) => continue,
+                        Some(_) if !param.required => continue,
+                        None if param.required => {
+                            display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, &req, 0, 0).await;
+                            if let Some(redirect_url) = &param.redirect {
+                                let response = fetch_resource(&redirect_url, web_res_port, web_res_name).await?;
+                                return Ok(response);
+                            }
+                            filtered = true;
+                            break;
+                        },
+                        _ => {
+                            display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, &req, 0, 0).await;
+                            if let Some(redirect_url) = &param.redirect {
+                                let response = fetch_resource(&redirect_url, web_res_port, web_res_name).await?;
+                                return Ok(response);
+                            }
+                            filtered = true;
+                            break;
                         }
-                        filtered = true;
-                        break;
-                    },
-                    _ => {
-                        display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, &req, 0, 0).await;
-                        if let Some(redirect_url) = &param.redirect {
-                            let response = fetch_resource(&redirect_url, web_res_port, web_res_name).await?;
-                            return Ok(response);
-                        }
-                        filtered = true;
-                        break;
                     }
                 }
             }

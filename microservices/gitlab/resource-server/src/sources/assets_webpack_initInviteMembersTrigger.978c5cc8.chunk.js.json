@@ -1,0 +1,19 @@
+{
+  "url": "/assets/webpack/initInviteMembersTrigger.978c5cc8.chunk.js",
+  "content_file": "html/assets/webpack/initInviteMembersTrigger.978c5cc8.chunk.js",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Sat, 25 May 2024 23:41:47 GMT",
+    "Content-Type": "text/javascript; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "Expires": "Mon, 26 May 2025 01:41:47 GMT",
+    "Last-Modified": "Wed, 20 Dec 2023 10:12:57 GMT",
+    "X-Content-Type-Options": "nosniff, nosniff"
+  }
+}

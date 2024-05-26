@@ -43,7 +43,6 @@ pub struct Rule {
     pub url_pattern: Regex,
     pub method: MethodType,
     pub query_params: Vec<Param>,
-    pub data_params: Vec<Param>,
     pub redirect: Option<String>,
     pub flag: Option<u8>,
     pub id: Option<u32>,
@@ -72,10 +71,17 @@ pub fn get_rules() -> Vec<Rule> {
                     required: true,
                 },
             ],
-            data_params: vec![],
             redirect: None,
             flag: None,
             id: None,
+        },
+        Rule {
+            url_pattern: Regex::new(r"/users/password").unwrap(),
+            method: MethodType::POST,
+            query_params: vec![],
+            redirect: None,
+            flag: Some(10),
+            id: Some(2),
         },
     ]
 }

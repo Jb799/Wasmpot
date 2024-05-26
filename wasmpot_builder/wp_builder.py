@@ -1,16 +1,13 @@
-import sys
 import os
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse, urljoin
 import json
 import re
-import gzip
-import json
-from urllib.parse import urljoin, urlparse
 from rich import print
 
 saved_contents = 0
+saved_endpoints_count = 0
 saved_endpoints = []
 web_port = ""
 web_address = ""
@@ -46,16 +43,24 @@ def save_content(wp_folder, url, content, extension):
         sanitized_path = relative_path.strip("/").replace("../", "")
         file_path = os.path.join(wp_folder, 'html', sanitized_path)
     
+    # Ne pas écraser une ressource existante
+    if os.path.exists(file_path):
+        return
+    
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     
     # Sauvegarde du contenu dans le fichier
     with open(file_path, 'wb') as file:
         file.write(content)
 
-def save_endpoint(wp_folder, url, response, type):
-    global saved_contents
-    global saved_endpoints
+    if extension.lower() == 'html':
+        global saved_endpoints_count
+        saved_endpoints_count += 1
+    else:
+        global saved_contents
+        saved_contents += 1
 
+def save_endpoint(wp_folder, url, response, type):
     relative_path = os.path.relpath(url, wp_folder).replace("../", "")
     path_parts = os.path.split(relative_path)
     folder_path = os.path.join(wp_folder + '/html', *path_parts)
@@ -96,6 +101,10 @@ def save_endpoint(wp_folder, url, response, type):
 
         json_path = os.path.join(wp_folder, f'{json_url}.json')
 
+    # Ne pas écraser une ressource existante
+    if os.path.exists(json_path):
+        return
+
     # Adapt Port and Address
     if len(web_port) != 0:
         for key, value in response.headers.items():
@@ -126,8 +135,6 @@ def save_endpoint(wp_folder, url, response, type):
             'status_code': response.status_code,
             'headers': dict(response.headers),
         }, json_file, indent=2)
-
-        saved_contents += 1
 
     return True
 
@@ -168,6 +175,7 @@ def explore_url(wp_folder, url):
     
     loop = True
     if len(url) > 2 and url[-2:] == ";;":
+        url = url[:-2]
         loop = False
     
     pattern = re.compile(r'https?://[^/]+/?')
@@ -201,17 +209,28 @@ def explore_url(wp_folder, url):
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Trouver tous les liens dans la page
         links = soup.find_all(['a', 'link'], href=True)
-
-        # Trouver tous les scripts dans la page
         scripts = soup.find_all('script', src=True)
-
-        # Trouver toutes les images dans la page
         images = soup.find_all('img', src=True)
+        uses = soup.find_all('use', href=True)
+        metas = soup.find_all('meta', content=True)
+
+        for meta in metas:
+            content_value = meta['content']    
+            if 'http' in content_value:
+                absolute_url = urljoin(url, content_value)
+                if loop:
+                    explore_url(wp_folder, absolute_url)
+
+        for use_tag in uses:
+            href_value = use_tag['href']
+            svg_url, svg_fragment = href_value.split('#', 1) if '#' in href_value else (href_value, None)
+            absolute_svg_url = urljoin(url, svg_url)
+            if loop:
+                explore_url(wp_folder, absolute_svg_url)
 
         for link in links:
-            absolute_url = urljoin(url, link['href'])
+            absolute_url = urljoin(url, link['href'])    
             if loop:
                 explore_url(wp_folder, absolute_url)
 
@@ -222,6 +241,9 @@ def explore_url(wp_folder, url):
 
         for img in images:
             absolute_url = urljoin(url, img['src'])
+            if absolute_url.startswith('data:'):
+                absolute_url = urljoin(url, img['data-src'])
+            
             if loop:
                 explore_url(wp_folder, absolute_url)
     
@@ -277,7 +299,7 @@ def menu():
     if web_address != "":
         print(f"[cyan]|   ## LastEndpoint: {web_address} ##[/cyan]")
 
-    print(f"[cyan]|   ## [bold dark_orange3 underline]{saved_contents}[/bold dark_orange3 underline] contents & [bold dark_orange3 underline]{len(saved_endpoints)}[/bold dark_orange3 underline] endpoints ##[/cyan]")
+    print(f"[cyan]|   ## [bold dark_orange3 underline]{saved_contents}[/bold dark_orange3 underline] contents & [bold dark_orange3 underline]{saved_endpoints_count}[/bold dark_orange3 underline] endpoints ##[/cyan]")
 
     print("\n")
 
