@@ -14,6 +14,7 @@ use chrono::{DateTime, Utc, Duration, Datelike, Timelike};
 use url::form_urlencoded;
 use once_cell::sync::Lazy;
 use tokio::sync::Mutex;
+use lazy_static::lazy_static;
 
 mod rules;
 use rules::{MethodType, ParamValue, Param, get_rules};
@@ -31,10 +32,28 @@ struct LogEntry {
     flag: u8,
     method: String,
     path: String,
+    client_useragent: String,
     query_string: String,
     client_ip: String,
+    isp: String,
     country: String,
-    loc: String,
+    city: String,
+    lat: String,
+    long: String,
+}
+
+#[derive(Clone, Debug)]
+pub struct Localisation {
+    pub ip: String,
+    pub lat: String,
+    pub long: String,
+    pub country: String,
+    pub city: String,
+    pub isp: String,
+}
+
+lazy_static! {
+    static ref GLOBAL_LOCALISATIONS: Mutex<Vec<Localisation>> = Mutex::new(vec![]);
 }
 
 async fn fetch_resource(path: &str, web_res_port: u16, web_res_name: String) -> Result<Response<Body>, hyper::Error> {
@@ -67,21 +86,23 @@ fn is_dst(datetime: DateTime<Utc>) -> bool {
     (month > 3 && month < 10) || (month == 3 && hour >= 1) || (month == 10 && hour < 1)
 }
 
-async fn fetch_ip_info(ip: &str) -> (String, String) {
+async fn fetch_ip_info(ip: &str) -> Result<(String, String, String, String, String), Box<dyn std::error::Error>> {
     let client = Client::new();
-    let uri = format!("http://ipinfo.io/{}", ip).parse::<Uri>().expect("Failed to parse URI");
-    match client.get(uri).await {
-        Ok(response) => {
-            let body = hyper::body::to_bytes(response.into_body()).await.expect("Failed to read response body");
-            let data: Value = serde_json::from_slice(&body).expect("Failed to parse JSON");
-            let loc = data.get("loc").and_then(|v| v.as_str()).unwrap_or("Unknown Location").to_string();
-            let country = data.get("country").and_then(|v| v.as_str()).unwrap_or("Unknown Country").to_string();
-            (loc, country)
-        },
-        Err(e) => {
-            eprintln!("API request failed: {}", e);
-            ("API request failed".to_string(), "API request failed".to_string())
-        }
+    let uri = format!("http://ip-api.com/json/{}", ip).parse::<Uri>()?;
+    let response = client.get(uri).await?;
+
+    let body_bytes = hyper::body::to_bytes(response.into_body()).await?;
+    let body_string = String::from_utf8(body_bytes.to_vec())?;
+
+    if let Ok(data) = serde_json::from_str::<Value>(&body_string) {
+        let lat = data.get("lat").and_then(|v| v.as_str()).unwrap_or("0").to_string();
+        let long = data.get("lon").and_then(|v| v.as_str()).unwrap_or("0").to_string();
+        let country = data.get("country").and_then(|v| v.as_str()).unwrap_or("Unknown Country").to_string();
+        let city = data.get("city").and_then(|v| v.as_str()).unwrap_or("Unknown City").to_string();
+        let isp = data.get("isp").and_then(|v| v.as_str()).unwrap_or("Unknown ISP").to_string();
+        Ok((lat, long, country, city, isp))
+    } else {
+        Err("Failed to parse JSON".into())
     }
 }
 
@@ -95,19 +116,48 @@ async fn display_logs(
     _flag: u8,
     _id: u32
 ) {
+    let mut locs = GLOBAL_LOCALISATIONS.lock().await;
+
     let method = req.method().as_str().to_string();
 
     let client_ip = req.headers().get("CF-Connecting-IP")
                      .and_then(|v| v.to_str().ok())
-                     .unwrap_or("Unknown IP");
-    
-    let mut loc = "0, 0".to_string();
-    let mut country = "Unknown Country".to_string();
+                     .unwrap_or("37.166.165.255");
 
-    if client_ip != "Unknown IP" {
-        let ip_info = fetch_ip_info(client_ip).await;
-        loc = ip_info.0;
-        country = ip_info.1;
+    let client_useragent = req.headers().get("User-Agent")
+                     .and_then(|v| v.to_str().ok())
+                     .unwrap_or("Unknown User-Agent");
+    
+    let mut lat: String = "0".to_string();
+    let mut long: String = "0".to_string();
+    let mut country = "Unknown Country".to_string();
+    let mut city = "Unknown City".to_string();
+    let mut isp = "Unknown Isp".to_string();
+
+    if let Some(_loc) = locs.iter().find(|l| l.ip == client_ip) {
+        lat = _loc.clone().lat;
+        long = _loc.clone().long;
+        country = _loc.country.clone();
+    } else if client_ip != "Unknown IP" {
+        if let Ok(ip_info) = fetch_ip_info(client_ip).await {
+            lat = ip_info.0;
+            long = ip_info.1;
+            country = ip_info.2;
+            city = ip_info.3;
+            isp = ip_info.4;
+
+            let new_loc = Localisation {
+                ip: client_ip.to_string(),
+                lat: lat.clone(),
+                long: long.clone(),
+                country: country.clone(),
+                city: city.clone(),
+                isp: isp.clone(),
+            };
+            locs.push(new_loc);
+        } else {
+            eprintln!("Failed to fetch or parse IP information");
+        }
     }
 
     let utc_now: DateTime<Utc> = Utc::now();
@@ -128,12 +178,16 @@ async fn display_logs(
         method: method.clone(),
         path: path.to_string(),
         query_string: query_string.clone(),
+        client_useragent: client_useragent.to_string(),
         client_ip: client_ip.to_string(),
-        country: country.to_string(),
-        loc: loc.to_string(),
+        isp: isp.clone(),
+        country: country.clone(),
+        city: city.clone(),
+        lat: lat.clone(),
+        long: long.clone(),
     };
 
-    println!("{},{},{},{},{},{},{},{},{}", paris_now, id, flag, method, path, query_string, client_ip, country, loc);
+    println!("{},{},{},{},{},{},{},{},{},{},{}, {}, {}", paris_now, id, flag, method, path, query_string, client_useragent, client_ip, isp, country, city, lat, long);
 
     let client = Client::new();
     let uri = format!("http://{}:{}/save_log", admin_name, admin_port).parse::<Uri>().unwrap();
