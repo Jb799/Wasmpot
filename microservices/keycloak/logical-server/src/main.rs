@@ -95,11 +95,12 @@ async fn fetch_ip_info(ip: &str) -> Result<(String, String, String, String, Stri
     let body_string = String::from_utf8(body_bytes.to_vec())?;
 
     if let Ok(data) = serde_json::from_str::<Value>(&body_string) {
-        let lat = data.get("lat").and_then(|v| v.as_str()).unwrap_or("0").to_string();
-        let long = data.get("lon").and_then(|v| v.as_str()).unwrap_or("0").to_string();
+        let lat = data.get("lat").and_then(|v| Some(v.to_string())).unwrap_or("0".to_string()).to_string();
+        let long = data.get("lon").and_then(|v| Some(v.to_string())).unwrap_or("0".to_string()).to_string();
         let country = data.get("country").and_then(|v| v.as_str()).unwrap_or("Unknown Country").to_string();
         let city = data.get("city").and_then(|v| v.as_str()).unwrap_or("Unknown City").to_string();
         let isp = data.get("isp").and_then(|v| v.as_str()).unwrap_or("Unknown ISP").to_string();
+
         Ok((lat, long, country, city, isp))
     } else {
         Err("Failed to parse JSON".into())
