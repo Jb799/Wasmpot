@@ -10,7 +10,7 @@
     "X-Robots-Tag": "none",
     "Cache-Control": "no-cache, must-revalidate, no-transform, no-store",
     "X-Content-Type-Options": "nosniff",
-    "Content-Security-Policy": "frame-src 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; object-src 'none';",
+    "Content-Security-Policy": "frame-src 'self' https://keycloak.authgates.com http://keycloak.authgates.com; object-src 'none';",
     "P3P": "CP=\"This is not a P3P policy!\"",
     "X-XSS-Protection": "1; mode=block",
     "Content-Type": "text/html;charset=utf-8",

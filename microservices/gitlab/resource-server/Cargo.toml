@@ -1,5 +1,5 @@
 [package]
-name = "wasmpot2_src"
+name = "wp2_resource_server"
 version = "0.1.0"
 edition = "2021"
 

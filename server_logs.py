@@ -23,9 +23,9 @@ def get_rotating_file_handler():
     handler = RotatingFileHandler(log_filename, maxBytes=MAX_LOG_SIZE, backupCount=5)
     
     # Si le fichier est vide, ajoutez l'en-tête
-    # if file_empty:
-    #     with open(log_filename, 'a') as log_file:
-    #         log_file.write("Timestamp,ID,FLAG,Method,Endpoint,Payload,User-Agent,IP,Isp,Country,City,Latitude,Longitude\n")
+    if file_empty:
+        with open(log_filename, 'a') as log_file:
+            log_file.write("Timestamp,ID,FLAG,Method,Endpoint,Payload,User-Agent,IP,Isp,Country,City,Latitude,Longitude\n")
     
     return handler
 

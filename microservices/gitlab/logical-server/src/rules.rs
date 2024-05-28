@@ -79,7 +79,7 @@ pub fn get_rules() -> Vec<Rule> {
             url_pattern: Regex::new(r"/users/password").unwrap(),
             method: MethodType::POST,
             query_params: vec![],
-            redirect: None,
+            redirect: Some(String::from("/users/sign_in/reset_pass")),
             flag: Some(10),
             id: Some(2),
         },

@@ -23,14 +23,14 @@ COPY ./src ./src
 
 # Build for release.
 RUN cargo build --target x86_64-unknown-linux-musl --release && \
-    rm ./target/x86_64-unknown-linux-musl/release/deps/wasmpot2_src* && \
+    rm ./target/x86_64-unknown-linux-musl/release/deps/wp2_resource_server* && \
     cargo install --path .
 
 # Stage 2: Setup the runtime environment
 FROM ubuntu:latest
 
 # Copy the binary from the builder stage & src contents
-COPY --from=builder /usr/local/cargo/bin/wasmpot2_src /usr/local/bin/wasmpot2_src
+COPY --from=builder /usr/local/cargo/bin/wp2_resource_server /usr/local/bin/wp2_resource_server
 COPY ./src/sources ./src/sources
 
 # Environment variables
@@ -42,4 +42,4 @@ ENV WASI_ADDR "localhost"
 EXPOSE $ACTIX_PORT
 
 # Use ENTRYPOINT to pass environment variables as arguments
-ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/wasmpot2_src $ACTIX_PORT $WASI_PORT $WASI_ADDR"]
+ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/wp2_resource_server $ACTIX_PORT $WASI_PORT $WASI_ADDR"]

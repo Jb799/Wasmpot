@@ -122,7 +122,7 @@ async fn display_logs(
 
     let client_ip = req.headers().get("CF-Connecting-IP")
                      .and_then(|v| v.to_str().ok())
-                     .unwrap_or("37.166.165.255");
+                     .unwrap_or("Unknown IP");
 
     let client_useragent = req.headers().get("User-Agent")
                      .and_then(|v| v.to_str().ok())
@@ -138,6 +138,8 @@ async fn display_logs(
         lat = _loc.clone().lat;
         long = _loc.clone().long;
         country = _loc.country.clone();
+        city = _loc.city.clone();
+        isp = _loc.isp.clone();
     } else if client_ip != "Unknown IP" {
         if let Ok(ip_info) = fetch_ip_info(client_ip).await {
             lat = ip_info.0;

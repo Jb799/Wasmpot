@@ -1,0 +1,14 @@
+{
+  "url": "/assets/webpack/826.1565d49f.chunk.js",
+  "content_file": "html/assets/webpack/826.1565d49f.chunk.js",
+  "type": "GET",
+  "query_params": "",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Content-Type": "text/javascript; charset=utf-8",
+    "Cache-Control": "public",
+    "Content-Encoding": "gzip",
+    "X-Content-Type-Options": "nosniff, nosniff"
+  }
+}

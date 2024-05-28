@@ -11,7 +11,7 @@
     "X-Robots-Tag": "none",
     "Cache-Control": "no-cache",
     "X-Content-Type-Options": "nosniff",
-    "Content-Security-Policy": "frame-src 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; frame-ancestors 'self' https://keycloak.wasmpot2.win http://keycloak.wasmpot2.win; object-src 'none';",
+    "Content-Security-Policy": "frame-src 'self' https://keycloak.authgates.com http://keycloak.authgates.com; frame-ancestors 'self' https://keycloak.authgates.com http://keycloak.authgates.com; object-src 'none';",
     "Set-Cookie": "AUTH_SESSION_ID=4060689b-1c18-45a5-afa3-776ea24b6070; Version=1; Path=/realms/master/; SameSite=None; Secure; HttpOnly, AUTH_SESSION_ID_LEGACY=4060689b-1c18-45a5-afa3-776ea24b6070; Version=1; Path=/realms/master/; HttpOnly",
     "X-XSS-Protection": "1; mode=block",
     "Content-Language": "en",
