@@ -27,6 +27,7 @@ static RULES: Lazy<Mutex<Vec<rules::Rule>>> = Lazy::new(|| {
 
 #[derive(Serialize)]
 struct LogEntry {
+    admin_index: String,
     timestamp: String,
     id: u32,
     flag: u8,
@@ -113,6 +114,7 @@ async fn display_logs(
     path: &str, 
     admin_name: String, 
     admin_port: u16, 
+    admin_index: String,
     req: &Request<Body>,
     _flag: u8,
     _id: u32
@@ -175,6 +177,7 @@ async fn display_logs(
         .unwrap_or((_id, _flag));
 
     let log_entry = LogEntry {
+        admin_index: admin_index.clone(),
         timestamp: paris_now.to_rfc3339(),
         id,
         flag,
@@ -289,7 +292,7 @@ async fn apply_response_modifications(
     Ok( response )
 }
 
-async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, admin_name: String, admin_port: u16) -> Result<Response<Body>, hyper::Error> {
+async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, admin_name: String, admin_port: u16, admin_index: String) -> Result<Response<Body>, hyper::Error> {
     let method = if req.method() == &Method::GET { MethodType::GET } else { MethodType::POST };
     let path = req.uri().path().to_owned();
     let query_string = req.uri().query().unwrap_or_default().to_owned();
@@ -316,6 +319,7 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
                     &path,
                     admin_name.clone(),
                     admin_port,
+                    admin_index.clone(),
                     &req,
                     rule.flag.unwrap_or(0),
                     rule.id.unwrap_or(0)
@@ -335,7 +339,7 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
                         Some(value) if is_value_valid(&param.value, value) => continue,
                         Some(_) if !param.required => continue,
                         None if param.required => {
-                            display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, &req, 0, 0).await;
+                            display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, admin_index.clone(), &req, 0, 0).await;
                             if let Some(redirect_url) = &param.redirect {
                                 let response = fetch_resource(&redirect_url, web_res_port, web_res_name).await?;
                                 return Ok(response);
@@ -344,7 +348,7 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
                             break;
                         },
                         _ => {
-                            display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, &req, 0, 0).await;
+                            display_logs(Some(&params), Some(param), &path, admin_name.clone(), admin_port, admin_index.clone(), &req, 0, 0).await;
                             if let Some(redirect_url) = &param.redirect {
                                 let response = fetch_resource(&redirect_url, web_res_port, web_res_name).await?;
                                 return Ok(response);
@@ -358,7 +362,7 @@ async fn echo(mut req: Request<Body>, web_res_port: u16, web_res_name: String, a
         }
 
         if !filtered{
-            display_logs(Some(&params), None, &path, admin_name.clone(), admin_port, &req, 0, 0).await;
+            display_logs(Some(&params), None, &path, admin_name.clone(), admin_port, admin_index.clone(), &req, 0, 0).await;
         }
     }else{
         let response = fetch_resource(&path, web_res_port, web_res_name).await?;
@@ -379,6 +383,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let mut actix_name: String = "localhost".to_string();
     let mut admin_port: u16 = 8068;
     let mut admin_name: String = "localhost".to_string();
+    let mut admin_index: String = "wp2".to_string();
 
     if args.len() >= 6 {
         if let Ok(port) = args[1].parse::<u16>() {
@@ -405,9 +410,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
 
         admin_name = args[5].clone();
+        admin_index = args[6].clone();
     } else {
-        println!("Missing arguments (WASI_PORT, ACTIX_PORT, ACTIX_NAME, ADMIN_PORT, ADMIN_NAME)");
-        return Err("Missing arguments (WASI_PORT, ACTIX_PORT, ACTIX_NAME, ADMIN_PORT, ADMIN_NAME)".into());
+        println!("Missing arguments (WASI_PORT, ACTIX_PORT, ACTIX_NAME, ADMIN_PORT, ADMIN_NAME, ADMIN_INDEX)");
+        return Err("Missing arguments (WASI_PORT, ACTIX_PORT, ACTIX_NAME, ADMIN_PORT, ADMIN_NAME, ADMIN_INDEX)".into());
     }
 
     let addr = SocketAddr::from(([0, 0, 0, 0], wasi_port));
@@ -419,9 +425,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let (stream, remote_addr) = listener.accept().await?;
         let actix_name_clone = actix_name.clone();
         let admin_name_clone = admin_name.clone();
+        let admin_index_clone = admin_index.clone();
         tokio::task::spawn(async move {
             if let Err(err) = Http::new().serve_connection(stream, service_fn(move |req| {
-                echo(req, actix_port, actix_name_clone.clone(), admin_name_clone.clone(), admin_port)
+                echo(req, actix_port, actix_name_clone.clone(), admin_name_clone.clone(), admin_port, admin_index_clone.clone())
             })).await {
                 // println!("Error serving connection: {}", err);
             }

@@ -10,9 +10,11 @@ MAX_LOG_SIZE = 5 * 1024 * 1024  # 5 MB
 LOG_DIR = '/var/log/wp2'
 LOG_FILENAME_TEMPLATE = 'wp2_log_{}.log'
 
-ELASTICSEARCH_URL = 'https://10.10.50.83:9200/wp2/_doc'
+ELASTICSEARCH_URL = 'https://10.10.50.83:9200/'
 ELASTICSEARCH_USER = 'elastic'
 ELASTICSEARCH_PASSWORD = 'dWDwSP38Yrn3RC0u'
+
+ADMIN_INDEX_LIST = []
 
 def get_rotating_file_handler():
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -33,6 +35,12 @@ def get_rotating_file_handler():
 def save_log():
     log_line = request.get_json()
     handler = get_rotating_file_handler()
+
+    if not log_line['admin_index']:
+        return jsonify({"error": 'Admin index not found...'}), 500
+    
+    if not log_line['admin_index'] in ADMIN_INDEX_LIST:
+        return jsonify({"error": 'Invalid admin index...'}), 500
 
     csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},"{log_line["method"]}","{log_line["path"]}","{log_line["query_string"]}","{log_line["client_useragent"]}","{log_line["client_ip"]}","{log_line["isp"]}","{log_line["country"]}","{log_line["city"]}",{log_line["lat"]},{log_line["long"]}\n'
 
@@ -61,7 +69,7 @@ def save_log():
 
     try:
         es_response = requests.post(
-            ELASTICSEARCH_URL,
+            'ELASTICSEARCH_URL' + log_line['admin_index'] + '/_doc',
             auth=(ELASTICSEARCH_USER, ELASTICSEARCH_PASSWORD),
             json=es_payload,
             verify=False
