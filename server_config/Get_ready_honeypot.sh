@@ -1,5 +1,22 @@
 #!/bin/bash
 
+echo -e " \033[33;5m   __         ____         __             ____                ____                          \033[0m"
+echo -e " \033[36;5m   \ \       / __ \       / /  ____      / ___|     __  __   |  _ \     _____     _____         \033[0m"
+echo -e " \033[36;5m    \ \     / /  \ \     / /  / /\ \    | |___     |  \/  |  | |_) |   / ___ \   |_   _|              \033[0m"
+echo -e " \033[36;5m     \ \   / /    \ \   / /  / /__\ \    \___ \    | |\/| |  |  __/   | |   | |    | |             \033[0m"
+echo -e " \033[36;5m      \ \_/ /      \ \_/ /  / /____\ \   ___) |    | |  | |  | |      | |___| |    | |              \033[0m"
+echo -e " \033[36;5m       \___/        \___/   \/      \/  |____/     |_|  |_|  |_|       \_____/     |_|           \033[0m"
+echo -e " \033[36;5m                                                                                                \033[0m"
+echo -e " \033[36;5m                                                                                              \033[0m"
+
+echo -e " \033[33;5m                                ____                            \033[0m"
+echo -e " \033[33;5m                               |__   \                           \033[0m"
+echo -e " \033[33;5m                                  )   |                            \033[0m"
+echo -e " \033[33;5m                                 /   /                            \033[0m"
+echo -e " \033[33;5m                                /   /                               \033[0m"
+echo -e " \033[33;5m                               /   /____                            \033[0m"
+echo -e " \033[33;5m                              (_________)                            \033[0m"
+
 # Version of Kube-VIP to deploy
 KVVERSION="v0.6.3"
 
@@ -109,7 +126,7 @@ echo -e " \033[32;5mFirst Node bootstrapped successfully!\033[0m"
 kubectl apply -f https://kube-vip.io/manifests/rbac.yaml
 
 # Step 3: Download kube-vip
-curl -sO https://raw.githubusercontent.com/JamesTurland/JimsGarage/main/Kubernetes/K3S-Deploy/kube-vip
+curl -sO https://raw.githubusercontent.com/Jb799/Wasmpot/main/server_config/kube-vip
 cat kube-vip | sed 's/$interface/'$interface'/g; s/$vip/'$vip'/g' > $HOME/kube-vip.yaml
 
 # Step 4: Copy kube-vip.yaml to master1
@@ -157,7 +174,7 @@ kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provi
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml
 # Download ipAddressPool and configure using lbrange above
-curl -sO https://raw.githubusercontent.com/JamesTurland/JimsGarage/main/Kubernetes/K3S-Deploy/ipAddressPool
+curl -sO https://raw.githubusercontent.com/Jb799/Wasmpot/main/server_config/ipAddressPool
 cat ipAddressPool | sed 's/$lbrange/'$lbrange'/g' > $HOME/ipAddressPool.yaml
 
 # Step 9: Test with Nginx
@@ -176,7 +193,7 @@ kubectl wait --namespace metallb-system \
                 --selector=component=controller \
                 --timeout=120s
 kubectl apply -f ipAddressPool.yaml
-kubectl apply -f https://raw.githubusercontent.com/JamesTurland/JimsGarage/main/Kubernetes/K3S-Deploy/l2Advertisement.yaml
+kubectl apply -f https://raw.githubusercontent.com/Jb799/Wasmpot/main/server_config/l2Advertisement.yaml
 
 kubectl get nodes
 kubectl get svc
