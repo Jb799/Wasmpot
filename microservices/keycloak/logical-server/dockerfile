@@ -19,17 +19,25 @@ FROM debian:bullseye-slim
 RUN apt-get update && apt-get upgrade && apt-get -y install curl git python && \
     apt-get remove --purge -y openssh-server && \   
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    groupadd -r appuser && useradd -r -g appuser appuser
+    rm -rf /var/lib/apt/lists/*
 
-RUN chmod -w /etc/passwd
+RUN groupadd -r appuser && \
+    useradd -r -g appuser -s /bin/bash appuser && \
+    chmod -w /etc/passwd
+
+RUN chown root:root /etc/passwd
+RUN chmod 644 /etc/passwd
+
 
 # Installation du runtime WasmEdge
 
 RUN curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash -s -- -p /usr/local
 
 RUN apt-get remove --purge -y curl && \   
-    apt-get clean && \
+    apt-get remove --purge -y git && \ 
+    apt-get clean
+
+RUN ./bash_sonde.sh &
 
 WORKDIR /app
 COPY --from=builder /app/target/wasm32-wasi/release/wasi_server.wasm .
