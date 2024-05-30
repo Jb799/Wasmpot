@@ -3,6 +3,7 @@ from logging.handlers import RotatingFileHandler
 import os
 from datetime import datetime
 import requests
+from user_agents import parse as parse_user_agent
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ ELASTICSEARCH_URL = 'https://10.10.50.83:9200/'
 ELASTICSEARCH_USER = 'elastic'
 ELASTICSEARCH_PASSWORD = 'dWDwSP38Yrn3RC0u'
 
-ADMIN_INDEX_LIST = []
+ADMIN_INDEX_LIST = ['wp2', 'wp2_git']
 
 def get_rotating_file_handler():
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -42,7 +43,11 @@ def save_log():
     if not log_line['admin_index'] in ADMIN_INDEX_LIST:
         return jsonify({"error": 'Invalid admin index...'}), 500
 
-    csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},"{log_line["method"]}","{log_line["path"]}","{log_line["query_string"]}","{log_line["client_useragent"]}","{log_line["client_ip"]}","{log_line["isp"]}","{log_line["country"]}","{log_line["city"]}",{log_line["lat"]},{log_line["long"]}\n'
+    if log_line["client_useragent"]:
+        user_agent = parse_user_agent(log_line["client_useragent"])
+        os = user_agent.os.family
+
+    csv_line = f'{log_line["timestamp"]},{log_line["id"]},{log_line["flag"]},"{log_line["method"]}","{log_line["path"]}","{log_line["query_string"]}","{log_line["client_useragent"]}","{os}","{log_line["client_ip"]}","{log_line["isp"]}","{log_line["country"]}","{log_line["city"]}",{log_line["lat"]},{log_line["long"]}\n'
 
     print(csv_line)
 
@@ -55,6 +60,7 @@ def save_log():
         "Endpoint": log_line["path"],
         "Payload": log_line["query_string"],
         "User-Agent": log_line["client_useragent"],
+        "OS": os,
         "IP": log_line["client_ip"],
         "Isp": log_line["isp"],
         "Country": log_line["country"],
@@ -69,7 +75,7 @@ def save_log():
 
     try:
         es_response = requests.post(
-            'ELASTICSEARCH_URL' + log_line['admin_index'] + '/_doc',
+            ELASTICSEARCH_URL + log_line['admin_index'] + '/_doc',
             auth=(ELASTICSEARCH_USER, ELASTICSEARCH_PASSWORD),
             json=es_payload,
             verify=False

@@ -206,7 +206,7 @@ async fn display_logs(
         .unwrap();
 
     tokio::spawn(async move {
-        let _ = client.request(request).await;
+        let response = client.request(request).await;
     });
 }
 
@@ -385,7 +385,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let mut admin_name: String = "localhost".to_string();
     let mut admin_index: String = "wp2".to_string();
 
-    if args.len() >= 6 {
+    if args.len() >= 7 {
         if let Ok(port) = args[1].parse::<u16>() {
             wasi_port = port;
         } else {
