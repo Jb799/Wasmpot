@@ -24,6 +24,7 @@ Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for en
 - Docker and Firecracker installed.
 - Elasticsearch and Kibana setup for log analysis.
 - Proxmox and Rancher configured for virtualization and cluster management.
+- Firecracker as VMM to host our containers (services)
 
 **Instructions:**
 1. **Setup Kubernetes Cluster:**
@@ -45,6 +46,22 @@ Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for en
    - Use the Python-based honeypot generator to create new honeypots from local servers.
 4. **Analyze Threats:**
    - Regularly review logs and alerts to understand and mitigate potential threats.
+
+### Architectures
+
+**Kubernetes:** 
+
+<img width="1116" alt="Capture d’écran 2024-06-03 à 16 08 05" src="https://github.com/Jb799/Wasmpot/assets/62985330/9c25d1f2-85fc-41c4-9a4e-ccc6581cc9dd">
+
+
+<img width="997" alt="Capture d’écran 2024-06-03 à 16 04 11" src="https://github.com/Jb799/Wasmpot/assets/62985330/03765a9e-59e8-4d5a-ae46-1b3c1105f49c">
+
+**Servers:** 
+
+<img width="837" alt="Capture d’écran 2024-06-03 à 16 12 36" src="https://github.com/Jb799/Wasmpot/assets/62985330/540a12f9-5c81-4a83-9b07-540c6c81b086">
+
+<img width="524" alt="Capture d’écran 2024-06-03 à 16 13 27" src="https://github.com/Jb799/Wasmpot/assets/62985330/f1636e54-b60c-4922-aab4-740a1ed4986d">
+
 
 ### Documentation 📄
 - **Project Charter:** Overview and objectives of Wasmpot2.
