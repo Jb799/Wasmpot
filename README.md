@@ -1,4 +1,4 @@
-####🕸️ **Wasmpot2: The First Keycloak and GitLab-Based Honeypot** 🐝
+#### 🕸️ **Wasmpot2: The First Keycloak and GitLab-Based Honeypot** 🐝
 
 ### Overview 🌐
 Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for enhanced security. It's the first of its kind, designed to be highly effective in trapping and analyzing threats within a secure Kubernetes environment.
