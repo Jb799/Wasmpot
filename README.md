@@ -17,6 +17,7 @@ Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for en
 - **Elasticsearch and Kibana:** Facilitates efficient log collection, monitoring, and visualization for in-depth threat analysis.
 - **Proxmox and Rancher:** Used for virtualization and Kubernetes cluster management.
 - **Docker:** Containers are used to run applications and microservices securely.
+- **Firecracker** as an hardened VMM to host our containers (services)
 
 ### Installation 🛠️
 **Prerequisites:**
@@ -24,7 +25,6 @@ Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for en
 - Docker and Firecracker installed.
 - Elasticsearch and Kibana setup for log analysis.
 - Proxmox and Rancher configured for virtualization and cluster management.
-- Firecracker as VMM to host our containers (services)
 
 **Instructions:**
 1. **Setup Kubernetes Cluster:**
