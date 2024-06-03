@@ -21,8 +21,8 @@ Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for en
 
 ### Installation 🛠️
 **Prerequisites:**
-- Kubernetes cluster with at least 4 Linux OS servers.
-- Docker and Firecracker installed.
+- Kubernetes cluster with at least 1 Linux OS servers.
+- Docker installed.
 - Elasticsearch and Kibana setup for log analysis.
 - Proxmox and Rancher configured for virtualization and cluster management.
 
