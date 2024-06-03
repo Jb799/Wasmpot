@@ -47,7 +47,7 @@ Wasmpot2 is an innovative honeypot solution utilizing Keycloak and GitLab for en
 4. **Analyze Threats:**
    - Regularly review logs and alerts to understand and mitigate potential threats.
 
-### Architectures
+### Architectures 🕸️
 
 **Kubernetes:** 
 
