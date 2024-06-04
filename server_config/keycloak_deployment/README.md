@@ -145,7 +145,7 @@ Apply the Deployment and Service using kubectl:
 kubectl apply -f firecracker-vm-pod.yaml
 ```
 
-##Explanation of YAML Files
+## Explanation of YAML Files
 ConfigMap (configmap-firecracker.yaml): This file creates a ConfigMap named init-script that contains an initialization script. The script installs Docker, pulls required Docker images, sets up a Docker network, and runs the Docker containers.
 
 Deployment (firecracker-vm-pod.yaml): This file defines a Kubernetes Deployment for Firecracker VM. It includes:
