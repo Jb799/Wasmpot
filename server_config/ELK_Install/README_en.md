@@ -400,3 +400,6 @@ If Helm is not already installed, follow the instructions in the [official Helm 
     green  open   .internal.alerts-observability.logs.alerts-default-000001          bzaQkIpLQmqtJPhoMY8_Mw   1   0          0            0       249b           249b         249b
     ...
     ```
+<img width="1467" alt="Capture d’écran 2024-06-04 à 21 56 02" src="https://github.com/Jb799/Wasmpot/assets/62985330/1fd020b9-48bc-404e-8a2c-c1e5c7364053">
+
+
