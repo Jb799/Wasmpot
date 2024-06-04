@@ -150,7 +150,7 @@ ConfigMap (configmap-firecracker.yaml): This file creates a ConfigMap named init
 
 Deployment (firecracker-vm-pod.yaml): This file defines a Kubernetes Deployment for Firecracker VM. It includes:
 
-Init Container: Copies the initialization script from the ConfigMap and makes it executable.
-Main Container: Executes the initialization script to set up the environment.
-Volumes: Uses an emptyDir volume to hold the initialization script.
-Service: Exposes the Firecracker VM via a LoadBalancer service on ports 22 (SSH), 8068 (log server), and 8000 (WASI server).
+- Init Container: Copies the initialization script from the ConfigMap and makes it executable.
+- Main Container: Executes the initialization script to set up the environment.
+- Volumes: Uses an emptyDir volume to hold the initialization script.
+- Service: Exposes the Firecracker VM via a LoadBalancer service on ports 22 (SSH), 8068 (log server), and 8000 (WASI server).
