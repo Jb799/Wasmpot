@@ -1,31 +1,33 @@
 #!/bin/bash
 
-# Installation de Docker
-apt-get update
-sleep 20
-apt-get install -y docker.io
-sleep 10
+    # Installation de Docker
+    apt-get update
+    apt-get install -y docker.io
 
-# Démarrage du service Docker
-service docker start
-sleep 10
+    # Attendre quelques secondes pour s'assurer que l'installation est terminée
+    sleep 10
+    echo "ok"
 
-# Pull des images Docker nécessaires
-docker pull jb799/wasmpot-resource-server:keycloak
-sleep 10
-docker pull jb799/wasmpot-logical-server:keycloak
-sleep 10
+    # Vérification que le service Docker est bien démarré
+    while ! service docker start > /dev/null 2>&1; do
+        echo "En attente que Docker démarre..."
+        sleep 1
+    done
 
-# Création du réseau Docker
-docker network create wp2_network
-sleep 10
+    # Pull des images Docker en parallèle
+    docker pull jb799/wasmpot-resource-server:keycloak &
+    docker pull jb799/wasmpot-logical-server:keycloak &
+    wait
 
-# Démarrage des conteneurs avec les arguments nécessaires
-docker run -d -p 8000:8000 -e WASI_PORT=8000 --network wp2_network --name wasi-container jb799/wasmpot-logical-server:keycloak 8000 8888 actix-container 8068 10.10.50.100
+    # Création du réseau Docker
+    docker network create wp2_network
 
-sleep 20
+    # Changement de contexte utilisateur et exécution des commandes Docker
+        docker run -d -p 8000:8000 -e WASI_PORT=8000 --network wp2_network --name wasi-container jb799/wasmpot-logical-server:keycloak 8000 8888 actix-container 8068 $NODE_IP wp2
+        docker run -d -p 8888:8888 -e ACTIX_PORT=8888 -e WASI_ADDR=keycloak.authgates.com --network wp2_network --name actix-container jb799/wasmpot-resource-server:keycloak
 
-docker run -d -p 8888:8888 -e ACTIX_PORT=8888 -e WASI_PORT=8000 -e WASI_ADDR=wasi-container --network wp2_network --name actix-container jb799/wasmpot-resource-server:keycloak
+    # Message de fin
+    echo "Installation et démarrage des conteneurs Docker terminés avec succès."
 
-# Keep the container running
+    # Cette commande garde le script en attente si nécessaire (pour les conteneurs Docker)
     tail -f /dev/null
