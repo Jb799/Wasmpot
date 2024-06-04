@@ -401,3 +401,4 @@ Si Helm n'est pas déjà installé, installez-le en suivant les instructions de 
     ...
     ```
 
+<img width="1467" alt="Capture d’écran 2024-06-04 à 21 56 02" src="https://github.com/Jb799/Wasmpot/assets/62985330/0c1509fc-de71-4acc-aeb5-725329e13738">
