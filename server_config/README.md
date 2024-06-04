@@ -47,14 +47,13 @@ Cloud:Init :
 * kubectl get nodes: Show nodes.
 * kubectl get pods: Show pods.
 
-## Open a firecracker vm
+## Create your reverse proxy 🔗
 
-1. Execute Get_ready_firecracker.sh
-2. In a new terminal execute Firecracker_vm.sh
+1. Create a new VM ( you can adapt the script Set_up_vm.sh )
+2. add and exec reverse_proxy.py
 
-## Deploy the honeypot 🚀
+## Deploy your VMM + keycloak 🔥
 
-1. Deploy wasi_service.yaml & actix_service.yaml with rancher
-2. Use the following command in the vm admin :
-   * kubectl apply -f /home/ubuntu/actix_deployment.yaml
-   * kubectl apply -f /home/ubuntu/wasi_deployment.yaml
+1. From the admin VM, follow the README.md ( keycloak_deployment/README.md )
+
+
