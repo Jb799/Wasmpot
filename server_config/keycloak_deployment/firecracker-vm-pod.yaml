@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-script
+data:
+  init.sh: |
+    #!/bin/bash
+
+    # Installation de Docker
+    apt-get update
+    apt-get install -y docker.io
+
+    # Attendre quelques secondes pour s'assurer que l'installation est terminée
+    sleep 10
+    echo "ok"
+
+    # Vérification que le service Docker est bien démarré
+    while ! service docker start > /dev/null 2>&1; do
+        echo "En attente que Docker démarre..."
+        sleep 1
+    done
+
+    # Pull des images Docker en parallèle
+    docker pull jb799/wasmpot-resource-server:keycloak &
+    docker pull jb799/wasmpot-logical-server:keycloak &
+    wait
+
+    # Création du réseau Docker
+    docker network create wp2_network
+
+    # Changement de contexte utilisateur et exécution des commandes Docker
+        docker run -d -p 8000:8000 -e WASI_PORT=8000 --network wp2_network --name wasi-container jb799/wasmpot-logical-server:keycloak 8000 8888 actix-container 8068 $NODE_IP wp2
+        docker run -d -p 8888:8888 -e ACTIX_PORT=8888 -e WASI_ADDR=keycloak.authgates.com --network wp2_network --name actix-container jb799/wasmpot-resource-server:keycloak
+
+    # Message de fin
+    echo "Installation et démarrage des conteneurs Docker terminés avec succès."
+
+    # Cette commande garde le script en attente si nécessaire (pour les conteneurs Docker)
+    tail -f /dev/null
+ls
+configmap-firecracker.yaml   firecracker_deploy  logs
+firecracker-config.yaml      firecracker_test    myenv
+firecracker-vm-pod.yaml      gitlab              server_log.py
+firecracker-vm-service.yaml  init.sh
+cat firecracker-vm-pod.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firecracker-vm-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: firecracker-vm
+  template:
+    metadata:
+      labels:
+        app: firecracker-vm
+    spec:
+      initContainers:
+      - name: init-script-copier
+        image: busybox
+        command: ['sh', '-c', 'cp /mnt/init-script/init.sh /home/ubuntu/firecracker/init.sh && chmod +x /home/ubuntu/firecracker/init.sh']
+        volumeMounts:
+        - name: init-script
+          mountPath: /mnt/init-script
+        - name: firecracker-dir
+          mountPath: /home/ubuntu/firecracker
+      containers:
+      - name: firecracker-agent
+        image: avhost/mesos-firecracker-executor
+        command: ["/bin/sh", "-c", "/home/ubuntu/firecracker/init.sh"]
+        volumeMounts:
+        - name: firecracker-dir
+          mountPath: /home/ubuntu/firecracker
+        ports:
+        - containerPort: 22
+        - containerPort: 8888  # Ajout du port 8888
+        securityContext:
+          privileged: true
+        env:
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+      volumes:
+      - name: init-script
+        configMap:
+          name: init-script
+      - name: firecracker-dir
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firecracker-vm-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: firecracker-vm
+  ports:
+    - name: ssh
+      protocol: TCP
+      port: 22
+      targetPort: 22
+    - name: logsserver
+      protocol: TCP
+      port: 8068
+      targetPort: 8068
+    - name: wasiserver
+      protocol: TCP
+      port: 8000
+      targetPort: 8000

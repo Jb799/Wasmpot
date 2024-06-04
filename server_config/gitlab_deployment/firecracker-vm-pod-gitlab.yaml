@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firecracker-vm-deployment-gitlab
+  namespace: gitlab
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: firecracker-vm-gitlab
+  template:
+    metadata:
+      labels:
+        app: firecracker-vm-gitlab
+    spec:
+      initContainers:
+      - name: init-script-copier
+        image: busybox
+        command: ['sh', '-c', 'cp /mnt/init-script/init.sh /home/ubuntu/firecracker/init-gitlab.sh && chmod +x /home/ubuntu/firecracker/init-gitlab.sh']
+        volumeMounts:
+        - name: init-script
+          mountPath: /mnt/init-script
+        - name: firecracker-dir
+          mountPath: /home/ubuntu/firecracker
+      containers:
+      - name: firecracker-agent-gitlab
+        image: avhost/mesos-firecracker-executor
+        command: ["/bin/sh", "-c", "/home/ubuntu/firecracker/init-gitlab.sh"]
+        volumeMounts:
+        - name: firecracker-dir
+          mountPath: /home/ubuntu/firecracker
+        ports:
+        - containerPort: 22
+        - containerPort: 8888  # Ajout du port 8888
+        securityContext:
+          privileged: true
+        env:
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+      volumes:
+      - name: init-script
+        configMap:
+          name: init-script
+      - name: firecracker-dir
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firecracker-vm-service-gitlab
+  namespace: gitlab
+spec:
+  type: LoadBalancer
+  selector:
+    app: firecracker-vm-gitlab
+  ports:
+    - name: ssh
+      protocol: TCP
+      port: 22
+      targetPort: 22
+    - name: logsserver
+      protocol: TCP
+      port: 8068
+      targetPort: 8068
+    - name: wasiserver
+      protocol: TCP
+      port: 8002
+      targetPort: 8002
