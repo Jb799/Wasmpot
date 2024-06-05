@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: firecracker-vm-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: firecracker-vm
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
