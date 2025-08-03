@@ -27,7 +27,7 @@ RUN cargo build --target x86_64-unknown-linux-musl --release && \
     cargo install --path .
 
 # Stage 2: Setup the runtime environment
-FROM ubuntu:latest
+FROM ubuntu:24.10
 
 # Copy the binary from the builder stage & src contents
 COPY --from=builder /usr/local/cargo/bin/wp2_resource_server /usr/local/bin/wp2_resource_server
